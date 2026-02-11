@@ -1,0 +1,25 @@
+{
+  "name": "book-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "jest --coverage --forceExit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bioblaze/testicles.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Bioblaze/testicles/issues"
+  },
+  "homepage": "https://github.com/Bioblaze/testicles#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
