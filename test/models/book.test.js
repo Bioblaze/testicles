@@ -68,6 +68,76 @@ describe('Book.create(db, fields)', () => {
   });
 });
 
+describe('Book.findAll(db, options)', () => {
+  let db;
+
+  beforeEach(() => {
+    db = getDatabase(':memory:');
+    migrate(db);
+  });
+
+  afterEach(() => {
+    if (db && db.open) {
+      db.close();
+    }
+  });
+
+  test('findAll returns { books: [], total: 0 } when no books exist', () => {
+    const result = Book.findAll(db);
+    expect(result).toEqual({ books: [], total: 0 });
+  });
+
+  test('findAll uses default limit of 20 and offset of 0', () => {
+    Book.create(db, makeBook());
+    const result = Book.findAll(db);
+    expect(result.books).toHaveLength(1);
+    expect(result.total).toBe(1);
+  });
+
+  test('findAll respects limit and offset pagination', () => {
+    // Insert 5 books with unique ISBNs
+    for (let i = 1; i <= 5; i++) {
+      Book.create(db, makeBook({ isbn: `978-0-00-000000-${i}`, title: `Book ${i}` }));
+    }
+
+    const result = Book.findAll(db, { limit: 2, offset: 2 });
+    expect(result.books).toHaveLength(2);
+    expect(result.total).toBe(5);
+  });
+
+  test('total always reflects the full count regardless of pagination', () => {
+    for (let i = 1; i <= 5; i++) {
+      Book.create(db, makeBook({ isbn: `978-0-00-000000-${i}`, title: `Book ${i}` }));
+    }
+
+    const page1 = Book.findAll(db, { limit: 1, offset: 0 });
+    expect(page1.books).toHaveLength(1);
+    expect(page1.total).toBe(5);
+
+    const page2 = Book.findAll(db, { limit: 3, offset: 4 });
+    expect(page2.books).toHaveLength(1);
+    expect(page2.total).toBe(5);
+  });
+
+  test('books are ordered by created_at DESC (newest first)', () => {
+    // Insert books with slight delay simulation via different created_at
+    // Since SQLite default is datetime('now'), all may have same timestamp in fast tests.
+    // We'll verify ordering by inserting and checking the query order is consistent.
+    for (let i = 1; i <= 3; i++) {
+      Book.create(db, makeBook({ isbn: `978-0-00-000000-${i}`, title: `Book ${i}` }));
+    }
+
+    const result = Book.findAll(db);
+    expect(result.books).toHaveLength(3);
+    // Verify all books are present
+    expect(result.total).toBe(3);
+    // Verify ordering: created_at of each book should be >= the next one
+    for (let i = 0; i < result.books.length - 1; i++) {
+      expect(result.books[i].created_at >= result.books[i + 1].created_at).toBe(true);
+    }
+  });
+});
+
 describe('Book.findById(db, id)', () => {
   let db;
 

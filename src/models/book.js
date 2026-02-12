@@ -61,6 +61,21 @@ const Book = {
     const book = stmt.get(id);
     return book || null;
   },
+
+  /**
+   * Returns a paginated list of books ordered by created_at DESC, along with the total count.
+   *
+   * @param {import('better-sqlite3').Database} db - A better-sqlite3 database instance.
+   * @param {Object} [options] - Pagination options.
+   * @param {number} [options.limit=20] - Maximum number of books to return.
+   * @param {number} [options.offset=0] - Number of books to skip.
+   * @returns {{ books: Object[], total: number }} Paginated books and total count.
+   */
+  findAll(db, { limit = 20, offset = 0 } = {}) {
+    const books = db.prepare('SELECT * FROM books ORDER BY created_at DESC LIMIT ? OFFSET ?').all(limit, offset);
+    const { total } = db.prepare('SELECT COUNT(*) AS total FROM books').get();
+    return { books, total };
+  },
 };
 
 module.exports = Book;
