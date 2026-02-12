@@ -67,3 +67,41 @@ describe('Book.create(db, fields)', () => {
     }).toThrow(/title/);
   });
 });
+
+describe('Book.findById(db, id)', () => {
+  let db;
+
+  beforeEach(() => {
+    db = getDatabase(':memory:');
+    migrate(db);
+  });
+
+  afterEach(() => {
+    if (db && db.open) {
+      db.close();
+    }
+  });
+
+  test('findById returns null for a non-existent ID', () => {
+    const result = Book.findById(db, 'non-existent-id');
+    expect(result).toBeNull();
+  });
+
+  test('findById returns the correct book matching the inserted data', () => {
+    const input = makeBook();
+    const created = Book.create(db, input);
+
+    const found = Book.findById(db, created.id);
+
+    expect(found).not.toBeNull();
+    expect(found.id).toBe(created.id);
+    expect(found.title).toBe(input.title);
+    expect(found.author).toBe(input.author);
+    expect(found.isbn).toBe(input.isbn);
+    expect(found.published_year).toBe(input.published_year);
+    expect(found.status).toBe('available');
+    expect(found.checked_out_at).toBeNull();
+    expect(found.created_at).toBeDefined();
+    expect(found.updated_at).toBeDefined();
+  });
+});

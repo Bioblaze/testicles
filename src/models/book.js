@@ -48,6 +48,19 @@ const Book = {
     const book = db.prepare('SELECT * FROM books WHERE id = ?').get(id);
     return book;
   },
+
+  /**
+   * Finds a book by its primary key (id).
+   *
+   * @param {import('better-sqlite3').Database} db - A better-sqlite3 database instance.
+   * @param {string} id - The UUID of the book to find.
+   * @returns {Object|null} The book object if found, or null if no match.
+   */
+  findById(db, id) {
+    const stmt = db.prepare('SELECT * FROM books WHERE id = ?');
+    const book = stmt.get(id);
+    return book || null;
+  },
 };
 
 module.exports = Book;
