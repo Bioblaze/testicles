@@ -1,4 +1,5 @@
 const { BookNotFoundError, BookUnavailableError } = require('../errors');
+const checkoutHistory = require('../models/checkoutHistory');
 
 /**
  * Checks out a book by transitioning its status from 'available' to 'checked_out'.
@@ -34,7 +35,10 @@ function checkoutBook(db, id) {
       'UPDATE books SET status = \'checked_out\', checked_out_at = ?, updated_at = ? WHERE id = ?'
     ).run(now, now, id);
 
-    // 6. Re-SELECT and return the updated book row
+    // 6. Record checkout history entry
+    checkoutHistory.create(db, { bookId: id, action: 'checked_out' });
+
+    // 7. Re-SELECT and return the updated book row
     return db.prepare('SELECT * FROM books WHERE id = ?').get(id);
   });
 
@@ -75,7 +79,10 @@ function returnBook(db, id) {
       'UPDATE books SET status = \'available\', checked_out_at = null, updated_at = ? WHERE id = ?'
     ).run(now, id);
 
-    // 6. Re-SELECT and return the updated book row
+    // 6. Record return history entry
+    checkoutHistory.create(db, { bookId: id, action: 'returned' });
+
+    // 7. Re-SELECT and return the updated book row
     return db.prepare('SELECT * FROM books WHERE id = ?').get(id);
   });
 

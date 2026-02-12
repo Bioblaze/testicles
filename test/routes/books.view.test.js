@@ -7,6 +7,7 @@ describe('GET /books/:id', () => {
   let seededBook;
 
   beforeEach(async () => {
+    app.locals.db.exec('DELETE FROM checkout_history');
     app.locals.db.exec('DELETE FROM books');
 
     const res = await request(app)
