@@ -74,8 +74,20 @@ router.get(
   '/:id',
   param('id').isUUID(4).withMessage('ID must be a valid UUID v4'),
   validate,
-  (req, res) => {
-    return res.status(501).json({ error: 'Not implemented' });
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const db = req.app.locals.db;
+      const book = Book.findById(db, id);
+
+      if (book === null) {
+        return res.status(404).json({ error: 'Book not found' });
+      }
+
+      return res.status(200).json(book);
+    } catch (err) {
+      return res.status(500).json({ error: 'Internal server error' });
+    }
   }
 );
 
