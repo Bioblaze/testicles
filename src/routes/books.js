@@ -2,6 +2,7 @@ const { Router } = require('express');
 const { body, query, param } = require('express-validator');
 const validate = require('../middleware/validate');
 const Book = require('../models/book');
+const checkoutHistory = require('../models/checkoutHistory');
 const { checkoutBook, returnBook } = require('../services/checkout');
 const { BookNotFoundError, BookUnavailableError } = require('../errors');
 
@@ -90,6 +91,34 @@ router.get(
     } catch (err) {
       return res.status(500).json({ error: 'Internal server error' });
     }
+  }
+);
+
+router.get(
+  '/:id/history',
+  param('id').isUUID(4).withMessage('ID must be a valid UUID v4'),
+  query('page').optional().isInt({ min: 1 }).toInt(),
+  query('limit').optional().isInt({ min: 1, max: 100 }).toInt(),
+  validate,
+  async (req, res) => {
+    const { id } = req.params;
+    const db = req.app.locals.db;
+
+    const book = Book.findById(db, id);
+    if (book === null) {
+      return res.status(404).json({ error: 'Book not found' });
+    }
+
+    const page = Number.isInteger(req.query.page) ? req.query.page : (parseInt(req.query.page, 10) || 1);
+    const limit = Number.isInteger(req.query.limit) ? req.query.limit : (parseInt(req.query.limit, 10) || 20);
+    const offset = (page - 1) * limit;
+
+    const { entries, total } = checkoutHistory.findByBookId(db, id, { limit, offset });
+
+    return res.status(200).json({
+      data: entries,
+      pagination: { page, limit, total },
+    });
   }
 );
 
