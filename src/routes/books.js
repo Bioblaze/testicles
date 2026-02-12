@@ -2,7 +2,7 @@ const { Router } = require('express');
 const { body, query, param } = require('express-validator');
 const validate = require('../middleware/validate');
 const Book = require('../models/book');
-const { checkoutBook } = require('../services/checkout');
+const { checkoutBook, returnBook } = require('../services/checkout');
 const { BookNotFoundError, BookUnavailableError } = require('../errors');
 
 const router = Router();
@@ -103,6 +103,29 @@ router.post(
 
     try {
       const updatedBook = checkoutBook(db, id);
+      res.json(updatedBook);
+    } catch (err) {
+      if (err instanceof BookNotFoundError) {
+        return res.status(404).json({ error: err.message });
+      }
+      if (err instanceof BookUnavailableError) {
+        return res.status(409).json({ error: err.message });
+      }
+      throw err;
+    }
+  }
+);
+
+router.post(
+  '/:id/return',
+  param('id').isUUID(4).withMessage('ID must be a valid UUID v4'),
+  validate,
+  (req, res) => {
+    const { id } = req.params;
+    const db = req.app.locals.db;
+
+    try {
+      const updatedBook = returnBook(db, id);
       res.json(updatedBook);
     } catch (err) {
       if (err instanceof BookNotFoundError) {
