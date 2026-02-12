@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { body } = require('express-validator');
+const { body, query } = require('express-validator');
 const validate = require('../middleware/validate');
 const Book = require('../models/book');
 
@@ -41,6 +41,32 @@ router.post(
       }
       throw err;
     }
+  }
+);
+
+router.get(
+  '/',
+  query('page').optional().isInt({ min: 1 }).toInt(),
+  query('limit').optional().isInt({ min: 1, max: 100 }).toInt(),
+  (req, res) => {
+    let page = parseInt(req.query.page, 10);
+    let limit = parseInt(req.query.limit, 10);
+
+    // Fall back to defaults if missing or invalid (not a valid integer)
+    page = Number.isInteger(page) && page >= 1 ? page : 1;
+    limit = Number.isInteger(limit) && limit >= 1 && limit <= 100 ? limit : 20;
+
+    const offset = (page - 1) * limit;
+    const { books, total } = Book.findAll(req.app.locals.db, { limit, offset });
+
+    return res.status(200).json({
+      data: books,
+      pagination: {
+        page,
+        limit,
+        total,
+      },
+    });
   }
 );
 
