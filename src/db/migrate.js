@@ -15,7 +15,9 @@ const migrationsDir = path.join(__dirname, 'migrations');
  *
  * @param {import('better-sqlite3').Database} db - A better-sqlite3 database instance.
  */
-function migrate(db) {
+function migrate(db, customMigrationsDir) {
+  const dir = customMigrationsDir || migrationsDir;
+
   // 1. Ensure the _migrations meta-table exists
   db.exec(`
     CREATE TABLE IF NOT EXISTS _migrations (
@@ -25,7 +27,7 @@ function migrate(db) {
   `);
 
   // 2. Read migration files, filter to .sql, sort lexicographically
-  const files = fs.readdirSync(migrationsDir)
+  const files = fs.readdirSync(dir)
     .filter(f => f.endsWith('.sql'))
     .sort();
 
@@ -45,7 +47,7 @@ function migrate(db) {
       continue;
     }
 
-    const filePath = path.join(migrationsDir, file);
+    const filePath = path.join(dir, file);
     const sql = fs.readFileSync(filePath, 'utf-8');
 
     const applyMigration = db.transaction(() => {

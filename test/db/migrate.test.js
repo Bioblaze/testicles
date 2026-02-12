@@ -138,14 +138,21 @@ describe('migrate(db)', () => {
     migrate(db);
     const countBefore = db.prepare('SELECT COUNT(*) AS cnt FROM _migrations').get().cnt;
 
-    // Now manually test transaction rollback by simulating a bad migration:
-    // Create a temp migration file with invalid SQL
-    const tempFile = path.join(MIGRATIONS_DIR, 'zzz_temp_bad_migration.sql');
+    // Use an isolated temp directory so parallel test runs are not affected
+    const os = require('os');
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'migrations-'));
     try {
-      fs.writeFileSync(tempFile, 'INVALID SQL STATEMENT HERE;', 'utf-8');
+      // Copy existing migrations into the temp directory
+      const existingFiles = fs.readdirSync(MIGRATIONS_DIR).filter(f => f.endsWith('.sql'));
+      for (const file of existingFiles) {
+        fs.copyFileSync(path.join(MIGRATIONS_DIR, file), path.join(tmpDir, file));
+      }
+
+      // Add a bad migration file with invalid SQL
+      fs.writeFileSync(path.join(tmpDir, 'zzz_temp_bad_migration.sql'), 'INVALID SQL STATEMENT HERE;', 'utf-8');
 
       // This should throw because the SQL is invalid
-      expect(() => migrate(db)).toThrow();
+      expect(() => migrate(db, tmpDir)).toThrow();
 
       // The bad migration should NOT be recorded
       const countAfter = db.prepare('SELECT COUNT(*) AS cnt FROM _migrations').get().cnt;
@@ -156,10 +163,8 @@ describe('migrate(db)', () => {
       ).get('zzz_temp_bad_migration.sql');
       expect(badRecord).toBeUndefined();
     } finally {
-      // Clean up the temporary file
-      if (fs.existsSync(tempFile)) {
-        fs.unlinkSync(tempFile);
-      }
+      // Clean up the temporary directory
+      fs.rmSync(tmpDir, { recursive: true, force: true });
     }
   });
 
