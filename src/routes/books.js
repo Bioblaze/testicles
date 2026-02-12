@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { body, query } = require('express-validator');
+const { body, query, param } = require('express-validator');
 const validate = require('../middleware/validate');
 const Book = require('../models/book');
 
@@ -67,6 +67,15 @@ router.get(
         total,
       },
     });
+  }
+);
+
+router.get(
+  '/:id',
+  param('id').isUUID(4).withMessage('ID must be a valid UUID v4'),
+  validate,
+  (req, res) => {
+    return res.status(501).json({ error: 'Not implemented' });
   }
 );
 
