@@ -2,6 +2,8 @@ const express = require('express');
 const helmet = require('helmet');
 const pinoHttp = require('pino-http');
 const logger = require('./logger');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./docs/swagger');
 const healthRouter = require('./routes/health');
 const { getDatabase } = require('./db/connection');
 const { migrate } = require('./db/migrate');
@@ -28,16 +30,24 @@ app.use(express.json());
 // 4. Rate limiting — after body parsing, before routes
 app.use(rateLimiter);
 
-// 5. Routes
+// 5. Raw OpenAPI JSON spec endpoint (before Swagger UI so it isn't caught by /docs)
+app.get('/docs/json', (req, res) => {
+  res.json(swaggerSpec);
+});
+
+// 6. Swagger UI — interactive API documentation
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// 7. Routes
 app.use('/', healthRouter);
 app.use('/books', booksRouter);
 
-// 6. 404 catch-all — after all routes, before error handler
+// 9. 404 catch-all — after all routes, before error handler
 app.use((req, res, next) => {
   res.status(404).json({ error: 'Not found' });
 });
 
-// 7. Centralized error handler — MUST be the absolute last middleware
+// 10. Centralized error handler — MUST be the absolute last middleware
 app.use(errorHandler);
 
 module.exports = app;
