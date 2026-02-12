@@ -530,10 +530,13 @@
       181,
       117,
       121,
-      170
+      170,
+      171,
+      182,
+      183,
+      109
     ],
-    "current": 171,
-    "current_at": "2026-02-12T06:36:23Z",
+    "current": 0,
     "ticket_history": [
       {
         "issue_number": 104,
@@ -1226,7 +1229,22 @@
       },
       {
         "issue_number": 171,
-        "opened_at": "2026-02-12T06:36:23Z"
+        "opened_at": "2026-02-12T06:36:23Z",
+        "closed_at": "2026-02-12T06:42:11Z"
+      },
+      {
+        "issue_number": 182,
+        "opened_at": "2026-02-12T06:42:13Z",
+        "closed_at": "2026-02-12T06:43:11Z"
+      },
+      {
+        "issue_number": 183,
+        "opened_at": "2026-02-12T06:43:13Z",
+        "closed_at": "2026-02-12T06:44:28Z"
+      },
+      {
+        "issue_number": 109,
+        "closed_at": "2026-02-12T06:45:03Z"
       }
     ]
   }

@@ -5,3 +5,4 @@ coverage/
 
 # Database files
 data/
+/build/logs/gh/*.log
