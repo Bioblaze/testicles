@@ -1,31 +1,23 @@
-const express = require('express');
 const request = require('supertest');
-const { getDatabase } = require('../../src/db/connection');
-const { migrate } = require('../../src/db/migrate');
-const booksRouter = require('../../src/routes/books');
+const app = require('../../src/app');
 
-function createApp(db) {
-  const app = express();
-  app.use(express.json());
-  app.locals.db = db;
-  app.use('/books', booksRouter);
-  return app;
-}
+const NON_EXISTENT_UUID = '00000000-0000-4000-8000-000000000000';
 
 describe('GET /books/:id', () => {
-  let db;
-  let app;
+  let seededBook;
 
-  beforeEach(() => {
-    db = getDatabase(':memory:');
-    migrate(db);
-    app = createApp(db);
-  });
+  beforeEach(async () => {
+    app.locals.db.exec('DELETE FROM books');
 
-  afterEach(() => {
-    if (db && db.open) {
-      db.close();
-    }
+    const res = await request(app)
+      .post('/books')
+      .send({
+        title: 'Test Book',
+        author: 'Test Author',
+        isbn: '978-3-16-148410-0',
+        published_year: 2023,
+      });
+    seededBook = res.body;
   });
 
   test('returns 400 with structured validation error for non-UUID string "not-a-uuid"', async () => {
@@ -67,16 +59,6 @@ describe('GET /books/:id', () => {
   });
 
   test('returns 200 with the correct book for a valid existing ID', async () => {
-    const createRes = await request(app)
-      .post('/books')
-      .send({
-        title: 'Test Book',
-        author: 'Test Author',
-        isbn: '978-3-16-148410-0',
-        published_year: 2023,
-      });
-    const seededBook = createRes.body;
-
     const res = await request(app).get(`/books/${seededBook.id}`);
 
     expect(res.status).toBe(200);
@@ -88,23 +70,13 @@ describe('GET /books/:id', () => {
   });
 
   test('returns 404 with { error: "Book not found" } for a valid UUID that does not exist', async () => {
-    const res = await request(app).get('/books/00000000-0000-4000-8000-000000000000');
+    const res = await request(app).get(`/books/${NON_EXISTENT_UUID}`);
 
     expect(res.status).toBe(404);
     expect(res.body).toEqual({ error: 'Book not found' });
   });
 
   test('response body contains all book schema fields', async () => {
-    const createRes = await request(app)
-      .post('/books')
-      .send({
-        title: 'Schema Test',
-        author: 'Schema Author',
-        isbn: '978-0-13-468599-1',
-        published_year: 2020,
-      });
-    const seededBook = createRes.body;
-
     const res = await request(app).get(`/books/${seededBook.id}`);
 
     expect(res.status).toBe(200);
@@ -120,16 +92,6 @@ describe('GET /books/:id', () => {
   });
 
   test('status field reflects "available" for a newly created book', async () => {
-    const createRes = await request(app)
-      .post('/books')
-      .send({
-        title: 'Status Test',
-        author: 'Status Author',
-        isbn: '978-0-596-51774-8',
-        published_year: 2021,
-      });
-    const seededBook = createRes.body;
-
     const res = await request(app).get(`/books/${seededBook.id}`);
 
     expect(res.status).toBe(200);
@@ -137,16 +99,6 @@ describe('GET /books/:id', () => {
   });
 
   test('checked_out_at is null for an available book', async () => {
-    const createRes = await request(app)
-      .post('/books')
-      .send({
-        title: 'Checkout Test',
-        author: 'Checkout Author',
-        isbn: '978-1-56619-909-4',
-        published_year: 2019,
-      });
-    const seededBook = createRes.body;
-
     const res = await request(app).get(`/books/${seededBook.id}`);
 
     expect(res.status).toBe(200);
