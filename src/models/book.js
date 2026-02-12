@@ -76,6 +76,62 @@ const Book = {
     const { total } = db.prepare('SELECT COUNT(*) AS total FROM books').get();
     return { books, total };
   },
+
+  /**
+   * Updates an existing book record with the provided fields.
+   *
+   * @param {import('better-sqlite3').Database} db - A better-sqlite3 database instance.
+   * @param {string} id - The UUID of the book to update.
+   * @param {Object} fields - An object containing the fields to update.
+   * @param {string} [fields.title] - The book title.
+   * @param {string} [fields.author] - The book author.
+   * @param {string} [fields.isbn] - The book ISBN (must be unique).
+   * @param {number} [fields.published_year] - The year the book was published.
+   * @param {string} [fields.status] - The book status.
+   * @param {string} [fields.checked_out_at] - The checkout timestamp.
+   * @returns {Object|null} The full updated book object, or null if no book was found.
+   * @throws {Error} If a book with the same ISBN already exists.
+   */
+  update(db, id, fields) {
+    const ALLOWED_FIELDS = ['title', 'author', 'isbn', 'published_year', 'status', 'checked_out_at'];
+
+    // Build dynamic SET clause from only allowed keys present in fields
+    const setClauses = [];
+    const values = [];
+
+    for (const field of ALLOWED_FIELDS) {
+      if (Object.prototype.hasOwnProperty.call(fields, field)) {
+        setClauses.push(`${field} = ?`);
+        values.push(fields[field]);
+      }
+    }
+
+    // Always set updated_at
+    const now = new Date().toISOString();
+    setClauses.push('updated_at = ?');
+    values.push(now);
+
+    // Append id for WHERE clause
+    values.push(id);
+
+    const sql = `UPDATE books SET ${setClauses.join(', ')} WHERE id = ?`;
+
+    try {
+      const result = db.prepare(sql).run(...values);
+
+      if (result.changes === 0) {
+        return null;
+      }
+    } catch (err) {
+      if (err.message && err.message.includes('UNIQUE constraint failed: books.isbn')) {
+        throw new Error('A book with this ISBN already exists');
+      }
+      throw err;
+    }
+
+    // Re-select and return the full updated row
+    return db.prepare('SELECT * FROM books WHERE id = ?').get(id);
+  },
 };
 
 module.exports = Book;

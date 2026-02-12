@@ -175,3 +175,134 @@ describe('Book.findById(db, id)', () => {
     expect(found.updated_at).toBeDefined();
   });
 });
+
+describe('Book.update(db, id, fields)', () => {
+  let db;
+
+  beforeEach(() => {
+    db = getDatabase(':memory:');
+    migrate(db);
+  });
+
+  afterEach(() => {
+    if (db && db.open) {
+      db.close();
+    }
+  });
+
+  test('returns null when updating a non-existent book', () => {
+    const result = Book.update(db, 'non-existent-id', { title: 'New Title' });
+    expect(result).toBeNull();
+  });
+
+  test('updates a single field (title) and returns the full updated book', () => {
+    const created = Book.create(db, makeBook());
+    const updated = Book.update(db, created.id, { title: 'Updated Title' });
+
+    expect(updated).not.toBeNull();
+    expect(updated.id).toBe(created.id);
+    expect(updated.title).toBe('Updated Title');
+    // Other fields remain unchanged
+    expect(updated.author).toBe(created.author);
+    expect(updated.isbn).toBe(created.isbn);
+    expect(updated.published_year).toBe(created.published_year);
+    expect(updated.status).toBe(created.status);
+  });
+
+  test('updates multiple fields at once', () => {
+    const created = Book.create(db, makeBook());
+    const updated = Book.update(db, created.id, {
+      title: 'New Title',
+      author: 'New Author',
+      published_year: 2025,
+    });
+
+    expect(updated).not.toBeNull();
+    expect(updated.title).toBe('New Title');
+    expect(updated.author).toBe('New Author');
+    expect(updated.published_year).toBe(2025);
+    // Unspecified fields remain unchanged
+    expect(updated.isbn).toBe(created.isbn);
+    expect(updated.status).toBe(created.status);
+  });
+
+  test('updates status and checked_out_at fields', () => {
+    const created = Book.create(db, makeBook());
+    const checkoutTime = new Date().toISOString();
+    const updated = Book.update(db, created.id, {
+      status: 'checked_out',
+      checked_out_at: checkoutTime,
+    });
+
+    expect(updated).not.toBeNull();
+    expect(updated.status).toBe('checked_out');
+    expect(updated.checked_out_at).toBe(checkoutTime);
+  });
+
+  test('always sets updated_at to a current ISO-8601 timestamp', () => {
+    const created = Book.create(db, makeBook());
+    const beforeUpdate = new Date().toISOString();
+    const updated = Book.update(db, created.id, { title: 'Changed' });
+    const afterUpdate = new Date().toISOString();
+
+    expect(updated).not.toBeNull();
+    expect(updated.updated_at).toBeDefined();
+    expect(updated.updated_at >= beforeUpdate).toBe(true);
+    expect(updated.updated_at <= afterUpdate).toBe(true);
+  });
+
+  test('sets updated_at even when no other fields are provided', () => {
+    const created = Book.create(db, makeBook());
+    const updated = Book.update(db, created.id, {});
+
+    expect(updated).not.toBeNull();
+    expect(updated.updated_at).toBeDefined();
+    // Title and other fields remain unchanged
+    expect(updated.title).toBe(created.title);
+    expect(updated.author).toBe(created.author);
+  });
+
+  test('throws descriptive error when updating isbn to a duplicate value', () => {
+    Book.create(db, makeBook({ isbn: '978-0-00-000000-1' }));
+    const second = Book.create(db, makeBook({ isbn: '978-0-00-000000-2', title: 'Second Book' }));
+
+    expect(() => {
+      Book.update(db, second.id, { isbn: '978-0-00-000000-1' });
+    }).toThrow('A book with this ISBN already exists');
+  });
+
+  test('updates isbn successfully when no conflict exists', () => {
+    const created = Book.create(db, makeBook());
+    const updated = Book.update(db, created.id, { isbn: '978-0-00-999999-9' });
+
+    expect(updated).not.toBeNull();
+    expect(updated.isbn).toBe('978-0-00-999999-9');
+  });
+
+  test('unspecified fields remain unchanged after update', () => {
+    const created = Book.create(db, makeBook());
+    const updated = Book.update(db, created.id, { title: 'Only Title Changed' });
+
+    expect(updated.author).toBe(created.author);
+    expect(updated.isbn).toBe(created.isbn);
+    expect(updated.published_year).toBe(created.published_year);
+    expect(updated.status).toBe(created.status);
+    expect(updated.checked_out_at).toBe(created.checked_out_at);
+    expect(updated.created_at).toBe(created.created_at);
+  });
+
+  test('returns the full book object after update', () => {
+    const created = Book.create(db, makeBook());
+    const updated = Book.update(db, created.id, { title: 'Full Object Check' });
+
+    expect(updated).toHaveProperty('id');
+    expect(updated).toHaveProperty('title');
+    expect(updated).toHaveProperty('author');
+    expect(updated).toHaveProperty('isbn');
+    expect(updated).toHaveProperty('published_year');
+    expect(updated).toHaveProperty('status');
+    expect(updated).toHaveProperty('checked_out_at');
+    expect(updated).toHaveProperty('created_at');
+    expect(updated).toHaveProperty('updated_at');
+  });
+});
