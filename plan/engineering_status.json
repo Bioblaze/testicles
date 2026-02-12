@@ -465,10 +465,75 @@
       111,
       112,
       113,
-      114
+      114,
+      115,
+      122,
+      123,
+      124,
+      125,
+      126,
+      116,
+      118,
+      119,
+      128,
+      129,
+      130,
+      131,
+      133,
+      134,
+      135,
+      136,
+      137,
+      138,
+      139,
+      140,
+      141,
+      142,
+      127,
+      132,
+      143,
+      144,
+      145,
+      146,
+      147,
+      148,
+      149,
+      150,
+      151,
+      152,
+      153,
+      154,
+      155,
+      156,
+      157,
+      158,
+      159,
+      160,
+      161,
+      162,
+      163,
+      164,
+      165,
+      166,
+      167,
+      168,
+      169,
+      172,
+      173,
+      174,
+      175,
+      176,
+      177,
+      178,
+      179,
+      180,
+      181,
+      117,
+      121,
+      170
     ],
-    "current": 115,
-    "current_at": "2026-02-12T02:11:48Z",
+    "current": 171,
+    "current_at": "2026-02-12T06:36:23Z",
     "ticket_history": [
       {
         "issue_number": 104,
@@ -668,7 +733,500 @@
       },
       {
         "issue_number": 115,
-        "opened_at": "2026-02-12T02:11:48Z"
+        "opened_at": "2026-02-12T02:11:48Z",
+        "closed_at": "2026-02-12T02:14:46Z"
+      },
+      {
+        "issue_number": 116,
+        "opened_at": "2026-02-12T02:14:47Z"
+      },
+      {
+        "issue_number": 118,
+        "opened_at": "2026-02-12T02:16:10Z"
+      },
+      {
+        "issue_number": 119,
+        "opened_at": "2026-02-12T02:17:21Z"
+      },
+      {
+        "issue_number": 121,
+        "opened_at": "2026-02-12T02:19:19Z"
+      },
+      {
+        "issue_number": 122,
+        "opened_at": "2026-02-12T02:21:10Z",
+        "closed_at": "2026-02-12T02:24:59Z"
+      },
+      {
+        "issue_number": 123,
+        "opened_at": "2026-02-12T02:25:00Z",
+        "closed_at": "2026-02-12T02:28:31Z"
+      },
+      {
+        "issue_number": 124,
+        "opened_at": "2026-02-12T02:28:32Z",
+        "closed_at": "2026-02-12T02:31:50Z"
+      },
+      {
+        "issue_number": 125,
+        "opened_at": "2026-02-12T02:31:51Z",
+        "closed_at": "2026-02-12T02:35:00Z"
+      },
+      {
+        "issue_number": 126,
+        "opened_at": "2026-02-12T02:35:01Z",
+        "closed_at": "2026-02-12T02:37:52Z"
+      },
+      {
+        "issue_number": 127,
+        "opened_at": "2026-02-12T02:37:53Z"
+      },
+      {
+        "issue_number": 128,
+        "opened_at": "2026-02-12T02:41:18Z"
+      },
+      {
+        "issue_number": 129,
+        "opened_at": "2026-02-12T02:43:07Z"
+      },
+      {
+        "issue_number": 130,
+        "opened_at": "2026-02-12T02:45:20Z"
+      },
+      {
+        "issue_number": 109,
+        "opened_at": "2026-02-12T03:00:17Z"
+      },
+      {
+        "issue_number": 109,
+        "opened_at": "2026-02-12T03:01:53Z"
+      },
+      {
+        "issue_number": 109,
+        "opened_at": "2026-02-12T03:02:10Z"
+      },
+      {
+        "issue_number": 109,
+        "opened_at": "2026-02-12T03:03:30Z"
+      },
+      {
+        "issue_number": 116,
+        "opened_at": "2026-02-12T03:11:35Z",
+        "closed_at": "2026-02-12T03:12:20Z"
+      },
+      {
+        "issue_number": 118,
+        "opened_at": "2026-02-12T03:12:21Z",
+        "closed_at": "2026-02-12T03:13:01Z"
+      },
+      {
+        "issue_number": 119,
+        "opened_at": "2026-02-12T03:13:02Z",
+        "closed_at": "2026-02-12T03:13:41Z"
+      },
+      {
+        "issue_number": 128,
+        "opened_at": "2026-02-12T03:13:42Z",
+        "closed_at": "2026-02-12T03:14:31Z"
+      },
+      {
+        "issue_number": 129,
+        "opened_at": "2026-02-12T03:14:32Z",
+        "closed_at": "2026-02-12T03:15:18Z"
+      },
+      {
+        "issue_number": 130,
+        "opened_at": "2026-02-12T03:15:19Z",
+        "closed_at": "2026-02-12T03:15:59Z"
+      },
+      {
+        "issue_number": 131,
+        "opened_at": "2026-02-12T03:16:00Z",
+        "closed_at": "2026-02-12T03:16:58Z"
+      },
+      {
+        "issue_number": 132,
+        "opened_at": "2026-02-12T03:16:59Z"
+      },
+      {
+        "issue_number": 133,
+        "opened_at": "2026-02-12T03:18:25Z",
+        "closed_at": "2026-02-12T03:21:28Z"
+      },
+      {
+        "issue_number": 134,
+        "opened_at": "2026-02-12T03:21:30Z",
+        "closed_at": "2026-02-12T03:24:44Z"
+      },
+      {
+        "issue_number": 135,
+        "opened_at": "2026-02-12T03:24:45Z",
+        "closed_at": "2026-02-12T03:28:40Z"
+      },
+      {
+        "issue_number": 136,
+        "opened_at": "2026-02-12T03:28:41Z"
+      },
+      {
+        "issue_number": 136,
+        "opened_at": "2026-02-12T03:33:54Z",
+        "closed_at": "2026-02-12T03:37:35Z"
+      },
+      {
+        "issue_number": 137,
+        "opened_at": "2026-02-12T03:37:37Z",
+        "closed_at": "2026-02-12T03:42:03Z"
+      },
+      {
+        "issue_number": 138,
+        "opened_at": "2026-02-12T03:42:04Z",
+        "closed_at": "2026-02-12T03:45:29Z"
+      },
+      {
+        "issue_number": 139,
+        "opened_at": "2026-02-12T03:45:31Z",
+        "closed_at": "2026-02-12T03:46:26Z"
+      },
+      {
+        "issue_number": 140,
+        "opened_at": "2026-02-12T03:46:27Z",
+        "closed_at": "2026-02-12T03:47:17Z"
+      },
+      {
+        "issue_number": 141,
+        "opened_at": "2026-02-12T03:47:18Z",
+        "closed_at": "2026-02-12T03:48:23Z"
+      },
+      {
+        "issue_number": 142,
+        "opened_at": "2026-02-12T03:48:24Z",
+        "closed_at": "2026-02-12T03:51:58Z"
+      },
+      {
+        "issue_number": 143,
+        "opened_at": "2026-02-12T03:51:59Z"
+      },
+      {
+        "issue_number": 127,
+        "closed_at": "2026-02-12T03:53:08Z"
+      },
+      {
+        "issue_number": 132,
+        "closed_at": "2026-02-12T03:53:09Z"
+      },
+      {
+        "issue_number": 143,
+        "opened_at": "2026-02-12T03:53:15Z"
+      },
+      {
+        "issue_number": 143,
+        "opened_at": "2026-02-12T03:53:40Z"
+      },
+      {
+        "issue_number": 143,
+        "opened_at": "2026-02-12T03:53:41Z"
+      },
+      {
+        "issue_number": 143,
+        "opened_at": "2026-02-12T03:54:43Z"
+      },
+      {
+        "issue_number": 144,
+        "opened_at": "2026-02-12T03:54:43Z"
+      },
+      {
+        "issue_number": 144,
+        "opened_at": "2026-02-12T03:55:00Z"
+      },
+      {
+        "issue_number": 144,
+        "opened_at": "2026-02-12T03:55:17Z"
+      },
+      {
+        "issue_number": 145,
+        "opened_at": "2026-02-12T03:55:17Z"
+      },
+      {
+        "issue_number": 145,
+        "opened_at": "2026-02-12T03:55:35Z"
+      },
+      {
+        "issue_number": 145,
+        "opened_at": "2026-02-12T03:55:51Z"
+      },
+      {
+        "issue_number": 146,
+        "opened_at": "2026-02-12T03:55:51Z"
+      },
+      {
+        "issue_number": 146,
+        "opened_at": "2026-02-12T03:56:09Z"
+      },
+      {
+        "issue_number": 146,
+        "opened_at": "2026-02-12T03:56:25Z"
+      },
+      {
+        "issue_number": 147,
+        "opened_at": "2026-02-12T03:56:26Z"
+      },
+      {
+        "issue_number": 146,
+        "opened_at": "2026-02-12T03:56:44Z"
+      },
+      {
+        "issue_number": 148,
+        "opened_at": "2026-02-12T03:57:00Z"
+      },
+      {
+        "issue_number": 146,
+        "opened_at": "2026-02-12T03:57:11Z"
+      },
+      {
+        "issue_number": 143,
+        "opened_at": "2026-02-12T04:04:14Z",
+        "closed_at": "2026-02-12T04:05:05Z"
+      },
+      {
+        "issue_number": 144,
+        "opened_at": "2026-02-12T04:05:06Z",
+        "closed_at": "2026-02-12T04:11:13Z"
+      },
+      {
+        "issue_number": 145,
+        "opened_at": "2026-02-12T04:11:15Z",
+        "closed_at": "2026-02-12T04:11:54Z"
+      },
+      {
+        "issue_number": 146,
+        "opened_at": "2026-02-12T04:11:55Z",
+        "closed_at": "2026-02-12T04:12:42Z"
+      },
+      {
+        "issue_number": 147,
+        "opened_at": "2026-02-12T04:12:43Z",
+        "closed_at": "2026-02-12T04:13:40Z"
+      },
+      {
+        "issue_number": 148,
+        "opened_at": "2026-02-12T04:13:40Z",
+        "closed_at": "2026-02-12T04:14:29Z"
+      },
+      {
+        "issue_number": 149,
+        "opened_at": "2026-02-12T04:14:30Z",
+        "closed_at": "2026-02-12T04:15:14Z"
+      },
+      {
+        "issue_number": 150,
+        "opened_at": "2026-02-12T04:15:15Z",
+        "closed_at": "2026-02-12T04:16:04Z"
+      },
+      {
+        "issue_number": 151,
+        "opened_at": "2026-02-12T04:16:04Z",
+        "closed_at": "2026-02-12T04:16:54Z"
+      },
+      {
+        "issue_number": 152,
+        "opened_at": "2026-02-12T04:16:55Z",
+        "closed_at": "2026-02-12T04:17:52Z"
+      },
+      {
+        "issue_number": 153,
+        "opened_at": "2026-02-12T04:17:53Z",
+        "closed_at": "2026-02-12T04:21:12Z"
+      },
+      {
+        "issue_number": 154,
+        "opened_at": "2026-02-12T04:21:13Z"
+      },
+      {
+        "issue_number": 154,
+        "opened_at": "2026-02-12T04:21:30Z"
+      },
+      {
+        "issue_number": 154,
+        "opened_at": "2026-02-12T04:21:44Z"
+      },
+      {
+        "issue_number": 155,
+        "opened_at": "2026-02-12T04:22:01Z"
+      },
+      {
+        "issue_number": 154,
+        "opened_at": "2026-02-12T04:31:39Z",
+        "closed_at": "2026-02-12T04:35:40Z"
+      },
+      {
+        "issue_number": 155,
+        "opened_at": "2026-02-12T04:35:42Z",
+        "closed_at": "2026-02-12T04:39:18Z"
+      },
+      {
+        "issue_number": 156,
+        "opened_at": "2026-02-12T04:39:20Z",
+        "closed_at": "2026-02-12T04:43:02Z"
+      },
+      {
+        "issue_number": 157,
+        "opened_at": "2026-02-12T04:43:04Z",
+        "closed_at": "2026-02-12T04:46:54Z"
+      },
+      {
+        "issue_number": 158,
+        "opened_at": "2026-02-12T04:46:56Z",
+        "closed_at": "2026-02-12T04:47:42Z"
+      },
+      {
+        "issue_number": 159,
+        "opened_at": "2026-02-12T04:47:44Z",
+        "closed_at": "2026-02-12T04:48:27Z"
+      },
+      {
+        "issue_number": 160,
+        "opened_at": "2026-02-12T04:48:28Z",
+        "closed_at": "2026-02-12T04:53:06Z"
+      },
+      {
+        "issue_number": 161,
+        "opened_at": "2026-02-12T04:53:08Z",
+        "closed_at": "2026-02-12T04:58:33Z"
+      },
+      {
+        "issue_number": 162,
+        "opened_at": "2026-02-12T04:58:35Z",
+        "closed_at": "2026-02-12T04:59:34Z"
+      },
+      {
+        "issue_number": 163,
+        "opened_at": "2026-02-12T04:59:35Z",
+        "closed_at": "2026-02-12T05:03:21Z"
+      },
+      {
+        "issue_number": 164,
+        "opened_at": "2026-02-12T05:03:23Z",
+        "closed_at": "2026-02-12T05:07:34Z"
+      },
+      {
+        "issue_number": 165,
+        "opened_at": "2026-02-12T05:07:36Z",
+        "closed_at": "2026-02-12T05:11:27Z"
+      },
+      {
+        "issue_number": 166,
+        "opened_at": "2026-02-12T05:11:28Z",
+        "closed_at": "2026-02-12T05:20:57Z"
+      },
+      {
+        "issue_number": 167,
+        "opened_at": "2026-02-12T05:20:58Z",
+        "closed_at": "2026-02-12T05:25:16Z"
+      },
+      {
+        "issue_number": 168,
+        "opened_at": "2026-02-12T05:25:17Z",
+        "closed_at": "2026-02-12T05:26:31Z"
+      },
+      {
+        "issue_number": 169,
+        "opened_at": "2026-02-12T05:26:33Z",
+        "closed_at": "2026-02-12T05:29:56Z"
+      },
+      {
+        "issue_number": 170,
+        "opened_at": "2026-02-12T05:29:58Z"
+      },
+      {
+        "issue_number": 170,
+        "opened_at": "2026-02-12T05:35:46Z"
+      },
+      {
+        "issue_number": 171,
+        "opened_at": "2026-02-12T05:36:20Z"
+      },
+      {
+        "issue_number": 172,
+        "opened_at": "2026-02-12T05:36:53Z",
+        "closed_at": "2026-02-12T05:39:51Z"
+      },
+      {
+        "issue_number": 173,
+        "opened_at": "2026-02-12T05:39:53Z",
+        "closed_at": "2026-02-12T05:43:10Z"
+      },
+      {
+        "issue_number": 174,
+        "opened_at": "2026-02-12T05:43:12Z",
+        "closed_at": "2026-02-12T05:47:15Z"
+      },
+      {
+        "issue_number": 175,
+        "opened_at": "2026-02-12T05:47:17Z",
+        "closed_at": "2026-02-12T05:51:17Z"
+      },
+      {
+        "issue_number": 176,
+        "opened_at": "2026-02-12T05:51:19Z",
+        "closed_at": "2026-02-12T05:55:06Z"
+      },
+      {
+        "issue_number": 177,
+        "opened_at": "2026-02-12T05:55:08Z",
+        "closed_at": "2026-02-12T05:59:15Z"
+      },
+      {
+        "issue_number": 178,
+        "opened_at": "2026-02-12T05:59:17Z",
+        "closed_at": "2026-02-12T06:03:56Z"
+      },
+      {
+        "issue_number": 179,
+        "opened_at": "2026-02-12T06:03:58Z"
+      },
+      {
+        "issue_number": 179,
+        "opened_at": "2026-02-12T06:09:31Z",
+        "closed_at": "2026-02-12T06:10:35Z"
+      },
+      {
+        "issue_number": 180,
+        "opened_at": "2026-02-12T06:10:37Z",
+        "closed_at": "2026-02-12T06:21:40Z"
+      },
+      {
+        "issue_number": 181,
+        "opened_at": "2026-02-12T06:21:42Z",
+        "closed_at": "2026-02-12T06:22:43Z"
+      },
+      {
+        "issue_number": 182,
+        "opened_at": "2026-02-12T06:22:44Z"
+      },
+      {
+        "issue_number": 182,
+        "opened_at": "2026-02-12T06:29:02Z"
+      },
+      {
+        "issue_number": 183,
+        "opened_at": "2026-02-12T06:29:36Z"
+      },
+      {
+        "issue_number": 117,
+        "closed_at": "2026-02-12T06:35:20Z"
+      },
+      {
+        "issue_number": 121,
+        "closed_at": "2026-02-12T06:35:20Z"
+      },
+      {
+        "issue_number": 170,
+        "opened_at": "2026-02-12T06:35:24Z",
+        "closed_at": "2026-02-12T06:36:22Z"
+      },
+      {
+        "issue_number": 171,
+        "opened_at": "2026-02-12T06:36:23Z"
       }
     ]
   }
