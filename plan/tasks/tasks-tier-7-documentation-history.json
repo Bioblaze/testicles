@@ -1,0 +1,152 @@
+{
+  "document": "plan/tiers/tier-7-documentation-history.md",
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Install runtime and dev dependencies for Swagger and spec validation",
+      "description": "Install runtime dependencies `swagger-ui-express` (serves interactive Swagger UI as Express middleware) and `swagger-jsdoc` (generates OpenAPI 3.0 spec from JSDoc `@openapi` annotations) via `npm install swagger-ui-express swagger-jsdoc`. Install dev dependency `@apidevtools/swagger-parser` (validates generated OpenAPI specs in tests) via `npm install --save-dev @apidevtools/swagger-parser`. Verify all three packages appear in `package.json` under the correct dependency sections (`dependencies` for the first two, `devDependencies` for the parser).",
+      "dependencies": [],
+      "issue_file_path": "plan\\issues\\issue-tier-7-documentation-history-1.md",
+      "completed_at": "2026-02-11T20:39:22Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/172",
+      "github_issue_number": 172
+    },
+    {
+      "id": 2,
+      "title": "Create checkout_history database migration in src/db/migrations/002_create_checkout_history.sql",
+      "description": "Create the migration file `src/db/migrations/002_create_checkout_history.sql` that creates the `checkout_history` table with the following schema: `id` (TEXT, PRIMARY KEY — UUID v4 generated application-side), `book_id` (TEXT, NOT NULL, REFERENCES books(id) — foreign key linking to the books table), `action` (TEXT, NOT NULL — enum values `\"checked_out\"` or `\"returned\"`), and `timestamp` (TEXT, NOT NULL — ISO-8601 timestamp of when the action occurred). Also create an index `idx_checkout_history_book_id` on the `book_id` column for efficient history lookups by book. Use `CREATE TABLE IF NOT EXISTS` and `CREATE INDEX IF NOT EXISTS` for idempotency.",
+      "dependencies": [],
+      "issue_file_path": "plan\\issues\\issue-tier-7-documentation-history-2.md",
+      "completed_at": "2026-02-11T20:40:13Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/173",
+      "github_issue_number": 173
+    },
+    {
+      "id": 3,
+      "title": "Create checkoutHistory data-access model in src/models/checkoutHistory.js",
+      "description": "Create `src/models/checkoutHistory.js` exporting an object with two methods. (1) `create(db, { bookId, action })`: generates a UUID v4 for the `id` field, sets `timestamp` to the current ISO-8601 string (`new Date().toISOString()`), inserts a row into `checkout_history`, and returns the created history entry object. This method is designed to be called from within `src/services/checkout.js` inside the same transaction as the book status update to ensure atomicity. (2) `findByBookId(db, bookId, { limit, offset })`: defaults `limit` to 20 and `offset` to 0. Executes `SELECT * FROM checkout_history WHERE book_id = ? ORDER BY timestamp DESC LIMIT ? OFFSET ?` to retrieve entries in reverse chronological order (newest first). Executes a parallel count query `SELECT COUNT(*) AS total FROM checkout_history WHERE book_id = ?`. Returns `{ entries: HistoryEntry[], total: number }`.",
+      "dependencies": [
+        2
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-7-documentation-history-3.md",
+      "completed_at": "2026-02-11T20:40:55Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/174",
+      "github_issue_number": 174
+    },
+    {
+      "id": 4,
+      "title": "Modify checkout service to record history entries atomically within transactions",
+      "description": "Modify `src/services/checkout.js` to import `checkoutHistory` from `../models/checkoutHistory` and update both `checkoutBook` and `returnBook` functions. In `checkoutBook(db, id)`: after the existing UPDATE statement that changes the book's status (inside the transaction), call `checkoutHistory.create(db, { bookId: id, action: 'checked_out' })`. In `returnBook(db, id)`: after the existing UPDATE statement (inside the transaction), call `checkoutHistory.create(db, { bookId: id, action: 'returned' })`. Both history inserts run inside the same `db.transaction()` as the book status update, so they either commit together or roll back together, maintaining data consistency.",
+      "dependencies": [
+        3
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-7-documentation-history-4.md",
+      "completed_at": "2026-02-11T20:41:32Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/175",
+      "github_issue_number": 175
+    },
+    {
+      "id": 5,
+      "title": "Create OpenAPI spec generation config in src/docs/swagger.js",
+      "description": "Create `src/docs/swagger.js` that imports `swagger-jsdoc` and exports a generated OpenAPI 3.0 specification object. Configure the `swagger-jsdoc` options with: `definition.openapi` set to `'3.0.0'`; `definition.info` containing `title: 'Book API'`, `version: '1.0.0'`, and `description: 'A RESTful API for managing a book library with checkout/return functionality'`; `definition.servers` with one entry `{ url: '/api', description: 'API server' }`; and `apis` set to `['./src/routes/*.js']` so that all route files are scanned for `@openapi` JSDoc annotations. Call `swaggerJsdoc(options)` and export the resulting spec object as `module.exports`.",
+      "dependencies": [
+        1
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-7-documentation-history-5.md",
+      "completed_at": "2026-02-11T20:42:09Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/176",
+      "github_issue_number": 176
+    },
+    {
+      "id": 6,
+      "title": "Add GET /books/:id/history route handler to src/routes/books.js",
+      "description": "Add a new `GET /:id/history` route to `src/routes/books.js`. Import `checkoutHistory` model. Apply validation middleware: `param('id').isUUID(4).withMessage('ID must be a valid UUID v4')`, `query('page').optional().isInt({ min: 1 }).toInt()`, `query('limit').optional().isInt({ min: 1, max: 100 }).toInt()`, followed by the `validate` middleware. Handler logic: (1) Read `id` from `req.params.id`. (2) Verify the book exists by calling `book.findById(db, id)`. (3) If book is null, respond with `404` and `{ error: 'Book not found' }`. (4) Read `page` (default `1`) and `limit` (default `20`) from `req.query`. (5) Compute `offset = (page - 1) * limit`. (6) Call `checkoutHistory.findByBookId(db, id, { limit, offset })`. (7) Respond with `200` and `{ data: entries, pagination: { page, limit, total } }`. Invalid UUID returns `400` with validation error for `id`.",
+      "dependencies": [
+        3
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-7-documentation-history-6.md",
+      "completed_at": "2026-02-11T20:42:44Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/177",
+      "github_issue_number": 177
+    },
+    {
+      "id": 7,
+      "title": "Add @openapi JSDoc annotations to all route handlers",
+      "description": "Add `@openapi` JSDoc comment blocks to every route handler in `src/routes/books.js` and `src/routes/health.js`. Each annotation must include: the path and HTTP method, summary and description, parameters (path params, query params) with type/format/description, request body schema (for POST endpoints), all response codes with schema definitions, and tags for grouping. Routes to annotate: `GET /health` (tag: Health), `POST /books` (tag: Books), `GET /books` (tag: Books), `GET /books/:id` (tag: Books), `POST /books/:id/checkout` (tag: Books), `POST /books/:id/return` (tag: Books), `GET /books/:id/history` (tag: History). These annotations are the single source of truth for the API specification and are scanned by `swagger-jsdoc` to generate the OpenAPI spec. Follow the example formats provided in the plan for `GET /health` and `POST /books`.",
+      "dependencies": [
+        5,
+        6
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-7-documentation-history-7.md",
+      "completed_at": "2026-02-11T20:43:39Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/178",
+      "github_issue_number": 178
+    },
+    {
+      "id": 8,
+      "title": "Integrate Swagger UI and JSON spec endpoint into src/app.js",
+      "description": "Modify `src/app.js` to import `swagger-ui-express` as `swaggerUi` and the generated spec from `./docs/swagger` as `swaggerSpec`. Mount Swagger UI at `/docs` using `app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))`. Add a raw JSON endpoint at `/docs/json` via `app.get('/docs/json', (req, res) =\u003e { res.json(swaggerSpec); })`. These must be placed in the middleware stack after `rateLimiter` but before the API routes, resulting in the final order: (1) helmet(), (2) pino-http(logger), (3) express.json(), (4) rateLimiter, (5) Swagger UI at /docs, (6) Swagger JSON at /docs/json, (7) health route, (8) book routes (including /:id/history), (9) 404 catch-all, (10) errorHandler.",
+      "dependencies": [
+        5,
+        7
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-7-documentation-history-8.md",
+      "completed_at": "2026-02-11T20:44:19Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/179",
+      "github_issue_number": 179
+    },
+    {
+      "id": 9,
+      "title": "Create checkout history model unit tests in test/models/checkoutHistory.test.js",
+      "description": "Create `test/models/checkoutHistory.test.js` with 5 unit tests. Test setup: fresh in-memory DB per test, migrations run, book seeded. Tests: (1) History entry is created on checkout — seed a book, call `checkoutBook(db, id)`, assert `checkout_history` table has 1 row with `action: 'checked_out'`. (2) History entry is created on return — seed a book, checkout it, call `returnBook(db, id)`, assert table has 2 rows with the latest having `action: 'returned'`. (3) `findByBookId` returns entries in reverse chronological order — seed, checkout, return, call `findByBookId(db, bookId, {})`, assert first entry is `'returned'` and second is `'checked_out'`. (4) `findByBookId` respects pagination — seed, checkout/return 5 times (10 events), call `findByBookId(db, bookId, { limit: 3, offset: 0 })`, assert exactly 3 entries returned and `total` is 10. (5) `findByBookId` returns empty array for book with no history — seed a book (never checked out), call `findByBookId(db, bookId, {})`, assert `{ entries: [], total: 0 }`.",
+      "dependencies": [
+        4
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-7-documentation-history-9.md",
+      "completed_at": "2026-02-11T20:44:59Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/180",
+      "github_issue_number": 180
+    },
+    {
+      "id": 10,
+      "title": "Create history route integration tests in test/routes/books.history.test.js",
+      "description": "Create `test/routes/books.history.test.js` with 6 integration tests using `supertest`. Tests: (1) Returns checkout/return events for a book — seed, checkout, return, `GET /books/:id/history`, expect `200` with `data` array containing 2 entries. (2) Returns 404 for non-existent book — `GET /books/:nonexistentUuid/history`, expect `404` with `{ error: 'Book not found' }`. (3) Returns 400 for malformed UUID — `GET /books/not-a-uuid/history`, expect `400` with validation error for `id`. (4) Pagination query params work — seed, checkout/return multiple times, `GET /books/:id/history?page=1\u0026limit=2`, expect `200` with `data` having 2 entries and `pagination.total` reflecting the total event count. (5) History reflects full checkout-return cycle — seed, checkout, return, expect first entry is `'returned'` and second is `'checked_out'` (reverse chronological). (6) Empty history for book never checked out — seed book, `GET /books/:id/history`, expect `200` with `{ data: [], pagination: { page: 1, limit: 20, total: 0 } }`.",
+      "dependencies": [
+        4,
+        6,
+        8
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-7-documentation-history-10.md",
+      "completed_at": "2026-02-11T20:45:54Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/181",
+      "github_issue_number": 181
+    },
+    {
+      "id": 11,
+      "title": "Create Swagger spec validation tests in test/docs/swagger.test.js",
+      "description": "Create `test/docs/swagger.test.js` with 5 tests using `@apidevtools/swagger-parser` for validation. Tests: (1) Generated spec is valid OpenAPI 3.0 — load `swaggerSpec` from `src/docs/swagger.js`, validate it using `SwaggerParser.validate()`, assert validation passes without errors. (2) Every defined route has a path in the spec — compare registered Express routes from the app against `swaggerSpec.paths`, assert all routes are present. (3) All response codes are documented — for each path in the spec, check that all response codes used by the actual handlers appear in the spec, assert no undocumented response codes. (4) Spec contains required info fields — check `swaggerSpec.info` has `title`, `version`, and `description`. (5) All paths have at least one tag — iterate all paths and methods in the spec, assert every operation has a `tags` array with at least one entry. These tests run as part of `npm test` in CI, ensuring that missing or malformed annotations block the build and documentation never drifts from implementation.",
+      "dependencies": [
+        1,
+        8
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-7-documentation-history-11.md",
+      "completed_at": "2026-02-11T20:46:36Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/182",
+      "github_issue_number": 182
+    },
+    {
+      "id": 12,
+      "title": "Run full test suite and verify all tests pass including prior tiers",
+      "description": "Run `npm test` and verify: all 5 checkout history model tests in `test/models/checkoutHistory.test.js` pass, all 6 history route integration tests in `test/routes/books.history.test.js` pass, all 5 Swagger spec validation tests in `test/docs/swagger.test.js` pass, and all prior tier tests continue to pass. Confirm: `002_create_checkout_history.sql` creates the table and index correctly, `checkoutHistory.create` and `findByBookId` work as specified, checkout and return operations atomically record history entries within transactions, `GET /books/:id/history` returns paginated history in reverse chronological order, `GET /books/:id/history` returns 404 for non-existent books and 400 for malformed UUIDs, Swagger UI is accessible at `/docs` and renders all endpoints, raw OpenAPI JSON is available at `/docs/json`, every route handler has `@openapi` JSDoc annotations validated by the spec tests, and the CI pipeline remains green with spec validation included.",
+      "dependencies": [
+        9,
+        10,
+        11
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-7-documentation-history-12.md",
+      "completed_at": "2026-02-11T20:47:13Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/183",
+      "github_issue_number": 183
+    }
+  ]
+}

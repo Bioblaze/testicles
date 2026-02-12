@@ -1,0 +1,189 @@
+{
+  "document": "plan/tiers/tier-2-data-layer.md",
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Install production dependencies (better-sqlite3, uuid)",
+      "description": "Run `npm install better-sqlite3 uuid` to add the synchronous SQLite driver and UUID v4 generator as production dependencies. Verify both packages appear in `package.json` under `dependencies`.",
+      "dependencies": [],
+      "issue_file_path": "plan\\issues\\issue-tier-2-data-layer-1.md",
+      "completed_at": "2026-02-11T20:03:49Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/117",
+      "github_issue_number": 117
+    },
+    {
+      "id": 2,
+      "title": "Update .gitignore to exclude database files",
+      "description": "Append `*.db` and `data/` entries to the existing `.gitignore` file so that SQLite database files and the data directory are never committed to version control.",
+      "dependencies": [],
+      "issue_file_path": "plan\\issues\\issue-tier-2-data-layer-2.md",
+      "completed_at": "2026-02-11T20:04:24Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/118",
+      "github_issue_number": 118
+    },
+    {
+      "id": 3,
+      "title": "Create project directory structure for db and models",
+      "description": "Create the new directories required by Tier 2: `src/db/`, `src/db/migrations/`, `src/models/`, and `test/models/`.",
+      "dependencies": [],
+      "issue_file_path": "plan\\issues\\issue-tier-2-data-layer-3.md",
+      "completed_at": "2026-02-11T20:05:00Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/119",
+      "github_issue_number": 119
+    },
+    {
+      "id": 4,
+      "title": "Implement database connection factory (src/db/connection.js)",
+      "description": "Create `src/db/connection.js` exporting a `getDatabase(filepath)` function. When `NODE_ENV === 'test'` and no filepath is provided, default to `':memory:'`. Otherwise default to `process.env.DB_PATH || './data/books.db'`. Return a `better-sqlite3` instance with `PRAGMA journal_mode = WAL` and `PRAGMA foreign_keys = ON` enabled.",
+      "dependencies": [
+        1,
+        3
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-2-data-layer-4.md",
+      "completed_at": "2026-02-11T20:05:35Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/121",
+      "github_issue_number": 121
+    },
+    {
+      "id": 5,
+      "title": "Create initial books table migration (src/db/migrations/001_create_books.sql)",
+      "description": "Create the SQL migration file `src/db/migrations/001_create_books.sql` containing a `CREATE TABLE IF NOT EXISTS books` statement with columns: `id` (TEXT PK), `title` (TEXT NOT NULL), `author` (TEXT NOT NULL), `isbn` (TEXT NOT NULL UNIQUE), `published_year` (INTEGER NOT NULL), `status` (TEXT NOT NULL DEFAULT 'available'), `checked_out_at` (TEXT nullable), `created_at` (TEXT NOT NULL DEFAULT datetime('now')), `updated_at` (TEXT NOT NULL DEFAULT datetime('now')).",
+      "dependencies": [
+        3
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-2-data-layer-5.md",
+      "completed_at": "2026-02-11T20:06:16Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/122",
+      "github_issue_number": 122
+    },
+    {
+      "id": 6,
+      "title": "Implement schema migration runner (src/db/migrate.js)",
+      "description": "Create `src/db/migrate.js` exporting a `migrate(db)` function. It creates a `_migrations` meta-table if it does not exist, reads all `.sql` files from the `migrations/` directory in lexicographic order using `fs.readdirSync`/`fs.readFileSync`, checks each against `_migrations`, and executes unapplied migrations inside `db.transaction(...)`. Records each applied migration name in `_migrations`. Migrations are idempotent — running `migrate()` multiple times produces no side effects.",
+      "dependencies": [
+        4,
+        5
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-2-data-layer-6.md",
+      "completed_at": "2026-02-11T20:06:55Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/123",
+      "github_issue_number": 123
+    },
+    {
+      "id": 7,
+      "title": "Implement Book model create method (src/models/book.js)",
+      "description": "Create `src/models/book.js` and implement the `create(db, { title, author, isbn, published_year })` method. Generate a UUID v4 for the `id` field using the `uuid` package. Validate that all four required fields are present, throwing a descriptive `Error` if any are missing. Insert the record with a prepared statement. Catch SQLite UNIQUE constraint errors on `isbn` and re-throw as `\"A book with this ISBN already exists\"`. Return the full book object by selecting the newly inserted row.",
+      "dependencies": [
+        1,
+        6
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-2-data-layer-7.md",
+      "completed_at": "2026-02-11T20:07:43Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/124",
+      "github_issue_number": 124
+    },
+    {
+      "id": 8,
+      "title": "Implement Book model findById method",
+      "description": "Add the `findById(db, id)` method to `src/models/book.js`. Execute `SELECT * FROM books WHERE id = ?` and return the book object, or `null` if no row matches.",
+      "dependencies": [
+        7
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-2-data-layer-8.md",
+      "completed_at": "2026-02-11T20:08:20Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/125",
+      "github_issue_number": 125
+    },
+    {
+      "id": 9,
+      "title": "Implement Book model findAll method",
+      "description": "Add the `findAll(db, { limit, offset })` method to `src/models/book.js`. Default `limit` to 20 and `offset` to 0. Execute a paginated `SELECT * FROM books ORDER BY created_at DESC LIMIT ? OFFSET ?` and a parallel `SELECT COUNT(*) AS total FROM books`. Return `{ books: Book[], total: number }`.",
+      "dependencies": [
+        7
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-2-data-layer-9.md",
+      "completed_at": "2026-02-11T20:08:52Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/126",
+      "github_issue_number": 126
+    },
+    {
+      "id": 10,
+      "title": "Implement Book model update method",
+      "description": "Add the `update(db, id, fields)` method to `src/models/book.js`. Accept a partial `fields` object (any subset of `title`, `author`, `isbn`, `published_year`, `status`, `checked_out_at`). Dynamically build the `SET` clause from provided fields. Always set `updated_at` to the current ISO-8601 timestamp. Execute the update with a prepared statement. Return `null` if no rows are affected (book not found), otherwise re-select and return the updated book object. Catch duplicate `isbn` constraint errors and re-throw as `\"A book with this ISBN already exists\"`.",
+      "dependencies": [
+        7
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-2-data-layer-10.md",
+      "completed_at": "2026-02-11T20:09:26Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/127",
+      "github_issue_number": 127
+    },
+    {
+      "id": 11,
+      "title": "Write unit tests for Book model create method (test/models/book.test.js)",
+      "description": "Create `test/models/book.test.js` with `beforeEach` creating a fresh in-memory database via `getDatabase(':memory:')` and running migrations, and `afterEach` closing the database. Include a `makeBook(overrides)` test factory. Implement test cases: (1) `create` inserts a book and returns it with a valid UUID `id`, `status: 'available'`, `created_at`, and `updated_at`; (2) `create` rejects duplicate ISBN with a descriptive error; (3) `create` rejects missing required fields (empty object); (4) `create` rejects missing `title` specifically with an error mentioning `title`.",
+      "dependencies": [
+        4,
+        6,
+        7
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-2-data-layer-11.md",
+      "completed_at": "2026-02-11T20:10:05Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/128",
+      "github_issue_number": 128
+    },
+    {
+      "id": 12,
+      "title": "Write unit tests for Book model findById method",
+      "description": "Add test cases to `test/models/book.test.js`: (5) `findById` returns `null` for a non-existent ID; (6) `findById` returns the correct book matching the inserted data.",
+      "dependencies": [
+        8,
+        11
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-2-data-layer-12.md",
+      "completed_at": "2026-02-11T20:10:40Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/129",
+      "github_issue_number": 129
+    },
+    {
+      "id": 13,
+      "title": "Write unit tests for Book model findAll method",
+      "description": "Add test cases to `test/models/book.test.js`: (7) `findAll` returns `{ books: [], total: 0 }` when no books exist; (8) `findAll` respects `limit` and `offset` pagination — insert 5 books, call with `{ limit: 2, offset: 2 }`, assert exactly 2 books returned and `total` is 5.",
+      "dependencies": [
+        9,
+        11
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-2-data-layer-13.md",
+      "completed_at": "2026-02-11T20:11:19Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/130",
+      "github_issue_number": 130
+    },
+    {
+      "id": 14,
+      "title": "Write unit tests for Book model update method and migration idempotency",
+      "description": "Add test cases to `test/models/book.test.js`: (9) `update` modifies only supplied fields and bumps `updated_at` to a newer value; (10) `update` returns `null` for a non-existent ID; (11) migrations are idempotent — calling `migrate(db)` twice does not error and tables exist correctly.",
+      "dependencies": [
+        10,
+        11
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-2-data-layer-14.md",
+      "completed_at": "2026-02-11T20:11:55Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/131",
+      "github_issue_number": 131
+    },
+    {
+      "id": 15,
+      "title": "Verify all tests pass and Tier 1 tests remain green",
+      "description": "Run `npm test` and confirm all 11 new Book model unit tests pass, all existing Tier 1 tests (health endpoint) continue to pass, coverage thresholds are met, and no database files are created on disk during test runs.",
+      "dependencies": [
+        12,
+        13,
+        14
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-2-data-layer-15.md",
+      "completed_at": "2026-02-11T20:12:37Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/132",
+      "github_issue_number": 132
+    }
+  ]
+}

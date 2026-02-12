@@ -1,0 +1,114 @@
+{
+  "document": "plan/tiers/tier-3-create-list-endpoints.md",
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Install express-validator dependency",
+      "description": "Run `npm install express-validator` to add the declarative request validation and sanitization library as a production dependency. Verify it appears in `package.json` under `dependencies`.",
+      "dependencies": [],
+      "issue_file_path": "plan\\issues\\issue-tier-3-create-list-endpoints-1.md",
+      "completed_at": "2026-02-11T20:13:06Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/133",
+      "github_issue_number": 133
+    },
+    {
+      "id": 2,
+      "title": "Create project directory structure for middleware and route tests",
+      "description": "Create the new directories required by Tier 3: `src/middleware/` and `test/routes/`.",
+      "dependencies": [],
+      "issue_file_path": "plan\\issues\\issue-tier-3-create-list-endpoints-2.md",
+      "completed_at": "2026-02-11T20:13:44Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/134",
+      "github_issue_number": 134
+    },
+    {
+      "id": 3,
+      "title": "Implement validation error handler middleware (src/middleware/validate.js)",
+      "description": "Create `src/middleware/validate.js` exporting a `validate` function. Call `validationResult(req)` from `express-validator`. If errors exist, extract and normalize them into `{ field, message }` objects (using `err.path` for the field name and `err.msg` for the message), respond with `400 Bad Request` and body `{ errors: [...] }`, and do not call `next()`. If no errors, call `next()` to pass control to the route handler.",
+      "dependencies": [
+        1,
+        2
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-3-create-list-endpoints-3.md",
+      "completed_at": "2026-02-11T20:14:22Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/135",
+      "github_issue_number": 135
+    },
+    {
+      "id": 4,
+      "title": "Implement POST /books route in src/routes/books.js",
+      "description": "Create `src/routes/books.js` with an Express Router. Define `POST /` with a middleware chain: (1) `body('title').trim().notEmpty().withMessage('Title is required').isLength({ max: 255 }).withMessage('Title must not exceed 255 characters')`, (2) `body('author').trim().notEmpty().withMessage('Author is required').isLength({ max: 255 }).withMessage('Author must not exceed 255 characters')`, (3) `body('isbn').notEmpty().withMessage('ISBN is required').isISBN().withMessage('ISBN must be a valid ISBN-10 or ISBN-13')`, (4) `body('published_year').isInt({ min: 1000, max: new Date().getFullYear() }).withMessage('Published year must be an integer between 1000 and the current year')`, (5) the `validate` middleware. The handler extracts validated fields from `req.body`, calls `book.create(req.app.locals.db, { title, author, isbn, published_year })`, responds with `201` and the created book on success, and catches duplicate ISBN errors to respond with `409 Conflict` and `{ error: \"A book with this ISBN already exists\" }`.",
+      "dependencies": [
+        1,
+        2,
+        3
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-3-create-list-endpoints-4.md",
+      "completed_at": "2026-02-11T20:14:58Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/136",
+      "github_issue_number": 136
+    },
+    {
+      "id": 5,
+      "title": "Implement GET /books route with pagination in src/routes/books.js",
+      "description": "Add `GET /` to the existing router in `src/routes/books.js`. Apply optional validation on `query('page')` (optional, `isInt({ min: 1 })`, `toInt()`) and `query('limit')` (optional, `isInt({ min: 1, max: 100 })`, `toInt()`). Do not use the validate middleware — invalid values silently fall back to defaults (`page=1`, `limit=20`). The handler reads `page` and `limit` from `req.query`, applies defaults if missing or invalid, computes `offset = (page - 1) * limit`, calls `book.findAll(req.app.locals.db, { limit, offset })`, and responds with `200` and `{ data: books, pagination: { page, limit, total } }`.",
+      "dependencies": [
+        4
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-3-create-list-endpoints-5.md",
+      "completed_at": "2026-02-11T20:15:33Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/137",
+      "github_issue_number": 137
+    },
+    {
+      "id": 6,
+      "title": "Modify src/app.js to initialize database and mount book routes",
+      "description": "Update `src/app.js` to import `getDatabase` from `./db/connection` and `migrate` from `./db/migrate`. Initialize the database with `const db = getDatabase()`, run `migrate(db)`, and attach it to `app.locals.db`. Ensure `express.json()` middleware is present at the top of the stack. Import and mount `routes/books.js` at `/books`. The existing health route and 404 catch-all must remain in their current positions (health first, 404 last).",
+      "dependencies": [
+        4,
+        5
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-3-create-list-endpoints-6.md",
+      "completed_at": "2026-02-11T20:16:05Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/138",
+      "github_issue_number": 138
+    },
+    {
+      "id": 7,
+      "title": "Write integration tests for POST /books (test/routes/books.create.test.js)",
+      "description": "Create `test/routes/books.create.test.js` using `supertest` against the app. Use an in-memory database (NODE_ENV=test). Define a `validBook` fixture with all required fields. Implement 9 test cases: (1) valid payload creates a book and returns 201 with all fields including UUID `id`, `status: 'available'`, `created_at`, and `updated_at`; (2) missing `title` returns 400 with error referencing `title`; (3) missing `author` returns 400 with error referencing `author`; (4) invalid ISBN format returns 400 with error referencing `isbn`; (5) `published_year` below 1000 returns 400; (6) `published_year` in the future (9999) returns 400; (7) empty body returns 400 with errors for all four required fields; (8) duplicate ISBN returns 409 with `{ error: \"A book with this ISBN already exists\" }`; (9) response includes expected default fields (`id`, `created_at`, `updated_at`, `status: 'available'`, `checked_out_at: null`).",
+      "dependencies": [
+        6
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-3-create-list-endpoints-7.md",
+      "completed_at": "2026-02-11T20:16:43Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/139",
+      "github_issue_number": 139
+    },
+    {
+      "id": 8,
+      "title": "Write integration tests for GET /books (test/routes/books.list.test.js)",
+      "description": "Create `test/routes/books.list.test.js` using `supertest` against the app. Seed the database with a known number of books (25) via the Book model's `create` method. Implement 8 test cases: (1) returns empty data array and `total: 0` when no books exist; (2) returns seeded books with 20 items in `data` and `pagination.total` of 25; (3) pagination defaults are applied (`page: 1`, `limit: 20`); (4) custom `page=2` and `limit=10` returns 10 items with correct pagination; (5) `limit` is capped at 100 when `limit=200` is requested; (6) response includes `data` (array) and `pagination` object with `page`, `limit`, `total`; (7) invalid `page=-1` falls back to default `page: 1`; (8) invalid `limit=abc` falls back to default `limit: 20`.",
+      "dependencies": [
+        6
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-3-create-list-endpoints-8.md",
+      "completed_at": "2026-02-11T20:17:21Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/140",
+      "github_issue_number": 140
+    },
+    {
+      "id": 9,
+      "title": "Verify all 17 integration tests pass and Tier 1/Tier 2 tests remain green",
+      "description": "Run `npm test` and confirm all 17 new integration tests pass (9 for POST /books, 8 for GET /books), all existing Tier 1 and Tier 2 tests continue to pass, coverage thresholds are met, and the CI pipeline remains green.",
+      "dependencies": [
+        7,
+        8
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-3-create-list-endpoints-9.md",
+      "completed_at": "2026-02-11T20:18:07Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/141",
+      "github_issue_number": 141
+    }
+  ]
+}

@@ -1,0 +1,647 @@
+{
+  "documents": [
+    {
+      "path": "plan\\tiers\\tier-1-foundation.md",
+      "status": "Processed",
+      "tasks_path": "plan\\tasks\\tasks-tier-1-foundation.json",
+      "task_count": 13,
+      "task_issues": [
+        {
+          "task_id": 1,
+          "issue_number": 104,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/104"
+        },
+        {
+          "task_id": 2,
+          "issue_number": 105,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/105"
+        },
+        {
+          "task_id": 3,
+          "issue_number": 106,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/106"
+        },
+        {
+          "task_id": 4,
+          "issue_number": 107,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/107"
+        },
+        {
+          "task_id": 5,
+          "issue_number": 108,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/108"
+        },
+        {
+          "task_id": 6,
+          "issue_number": 109,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/109"
+        },
+        {
+          "task_id": 7,
+          "issue_number": 110,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/110"
+        },
+        {
+          "task_id": 8,
+          "issue_number": 111,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/111"
+        },
+        {
+          "task_id": 9,
+          "issue_number": 112,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/112"
+        },
+        {
+          "task_id": 10,
+          "issue_number": 113,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/113"
+        },
+        {
+          "task_id": 11,
+          "issue_number": 114,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/114"
+        },
+        {
+          "task_id": 12,
+          "issue_number": 115,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/115"
+        },
+        {
+          "task_id": 13,
+          "issue_number": 116,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/116"
+        }
+      ]
+    },
+    {
+      "path": "plan\\tiers\\tier-2-data-layer.md",
+      "status": "Processed",
+      "tasks_path": "plan\\tasks\\tasks-tier-2-data-layer.json",
+      "task_count": 15,
+      "task_issues": [
+        {
+          "task_id": 1,
+          "issue_number": 117,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/117"
+        },
+        {
+          "task_id": 2,
+          "issue_number": 118,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/118"
+        },
+        {
+          "task_id": 3,
+          "issue_number": 119,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/119"
+        },
+        {
+          "task_id": 4,
+          "issue_number": 121,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/121"
+        },
+        {
+          "task_id": 5,
+          "issue_number": 122,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/122"
+        },
+        {
+          "task_id": 6,
+          "issue_number": 123,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/123"
+        },
+        {
+          "task_id": 7,
+          "issue_number": 124,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/124"
+        },
+        {
+          "task_id": 8,
+          "issue_number": 125,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/125"
+        },
+        {
+          "task_id": 9,
+          "issue_number": 126,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/126"
+        },
+        {
+          "task_id": 10,
+          "issue_number": 127,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/127"
+        },
+        {
+          "task_id": 11,
+          "issue_number": 128,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/128"
+        },
+        {
+          "task_id": 12,
+          "issue_number": 129,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/129"
+        },
+        {
+          "task_id": 13,
+          "issue_number": 130,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/130"
+        },
+        {
+          "task_id": 14,
+          "issue_number": 131,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/131"
+        },
+        {
+          "task_id": 15,
+          "issue_number": 132,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/132"
+        }
+      ]
+    },
+    {
+      "path": "plan\\tiers\\tier-3-create-list-endpoints.md",
+      "status": "Processed",
+      "tasks_path": "plan\\tasks\\tasks-tier-3-create-list-endpoints.json",
+      "task_count": 9,
+      "task_issues": [
+        {
+          "task_id": 1,
+          "issue_number": 133,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/133"
+        },
+        {
+          "task_id": 2,
+          "issue_number": 134,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/134"
+        },
+        {
+          "task_id": 3,
+          "issue_number": 135,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/135"
+        },
+        {
+          "task_id": 4,
+          "issue_number": 136,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/136"
+        },
+        {
+          "task_id": 5,
+          "issue_number": 137,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/137"
+        },
+        {
+          "task_id": 6,
+          "issue_number": 138,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/138"
+        },
+        {
+          "task_id": 7,
+          "issue_number": 139,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/139"
+        },
+        {
+          "task_id": 8,
+          "issue_number": 140,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/140"
+        },
+        {
+          "task_id": 9,
+          "issue_number": 141,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/141"
+        }
+      ]
+    },
+    {
+      "path": "plan\\tiers\\tier-4-view-endpoint.md",
+      "status": "Processed",
+      "tasks_path": "plan\\tasks\\tasks-tier-4-view-endpoint.json",
+      "task_count": 11,
+      "task_issues": [
+        {
+          "task_id": 1,
+          "issue_number": 142,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/142"
+        },
+        {
+          "task_id": 2,
+          "issue_number": 143,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/143"
+        },
+        {
+          "task_id": 3,
+          "issue_number": 144,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/144"
+        },
+        {
+          "task_id": 4,
+          "issue_number": 145,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/145"
+        },
+        {
+          "task_id": 5,
+          "issue_number": 146,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/146"
+        },
+        {
+          "task_id": 6,
+          "issue_number": 147,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/147"
+        },
+        {
+          "task_id": 7,
+          "issue_number": 148,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/148"
+        },
+        {
+          "task_id": 8,
+          "issue_number": 149,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/149"
+        },
+        {
+          "task_id": 9,
+          "issue_number": 150,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/150"
+        },
+        {
+          "task_id": 10,
+          "issue_number": 151,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/151"
+        },
+        {
+          "task_id": 11,
+          "issue_number": 152,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/152"
+        }
+      ]
+    },
+    {
+      "path": "plan\\tiers\\tier-5-checkout-return.md",
+      "status": "Processed",
+      "tasks_path": "plan\\tasks\\tasks-tier-5-checkout-return.json",
+      "task_count": 10,
+      "task_issues": [
+        {
+          "task_id": 1,
+          "issue_number": 153,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/153"
+        },
+        {
+          "task_id": 2,
+          "issue_number": 154,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/154"
+        },
+        {
+          "task_id": 3,
+          "issue_number": 155,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/155"
+        },
+        {
+          "task_id": 4,
+          "issue_number": 156,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/156"
+        },
+        {
+          "task_id": 5,
+          "issue_number": 157,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/157"
+        },
+        {
+          "task_id": 6,
+          "issue_number": 158,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/158"
+        },
+        {
+          "task_id": 7,
+          "issue_number": 159,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/159"
+        },
+        {
+          "task_id": 8,
+          "issue_number": 160,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/160"
+        },
+        {
+          "task_id": 9,
+          "issue_number": 161,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/161"
+        },
+        {
+          "task_id": 10,
+          "issue_number": 162,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/162"
+        }
+      ]
+    },
+    {
+      "path": "plan\\tiers\\tier-6-error-handling-hardening.md",
+      "status": "Processed",
+      "tasks_path": "plan\\tasks\\tasks-tier-6-error-handling-hardening.json",
+      "task_count": 9,
+      "task_issues": [
+        {
+          "task_id": 1,
+          "issue_number": 163,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/163"
+        },
+        {
+          "task_id": 2,
+          "issue_number": 164,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/164"
+        },
+        {
+          "task_id": 3,
+          "issue_number": 165,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/165"
+        },
+        {
+          "task_id": 4,
+          "issue_number": 166,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/166"
+        },
+        {
+          "task_id": 5,
+          "issue_number": 167,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/167"
+        },
+        {
+          "task_id": 6,
+          "issue_number": 168,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/168"
+        },
+        {
+          "task_id": 7,
+          "issue_number": 169,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/169"
+        },
+        {
+          "task_id": 8,
+          "issue_number": 170,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/170"
+        },
+        {
+          "task_id": 9,
+          "issue_number": 171,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/171"
+        }
+      ]
+    },
+    {
+      "path": "plan\\tiers\\tier-7-documentation-history.md",
+      "status": "Processed",
+      "tasks_path": "plan\\tasks\\tasks-tier-7-documentation-history.json",
+      "task_count": 12,
+      "task_issues": [
+        {
+          "task_id": 1,
+          "issue_number": 172,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/172"
+        },
+        {
+          "task_id": 2,
+          "issue_number": 173,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/173"
+        },
+        {
+          "task_id": 3,
+          "issue_number": 174,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/174"
+        },
+        {
+          "task_id": 4,
+          "issue_number": 175,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/175"
+        },
+        {
+          "task_id": 5,
+          "issue_number": 176,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/176"
+        },
+        {
+          "task_id": 6,
+          "issue_number": 177,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/177"
+        },
+        {
+          "task_id": 7,
+          "issue_number": 178,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/178"
+        },
+        {
+          "task_id": 8,
+          "issue_number": 179,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/179"
+        },
+        {
+          "task_id": 9,
+          "issue_number": 180,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/180"
+        },
+        {
+          "task_id": 10,
+          "issue_number": 181,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/181"
+        },
+        {
+          "task_id": 11,
+          "issue_number": 182,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/182"
+        },
+        {
+          "task_id": 12,
+          "issue_number": 183,
+          "issue_url": "https://github.com/Bioblaze/testicles/issues/183"
+        }
+      ]
+    }
+  ],
+  "total_tasks": 79,
+  "total_processed": 79,
+  "coding_status": {
+    "processed": [
+      105,
+      108,
+      106,
+      104,
+      107,
+      110,
+      111,
+      112,
+      113,
+      114
+    ],
+    "current": 119,
+    "current_at": "2026-02-12T01:38:13Z",
+    "ticket_history": [
+      {
+        "issue_number": 104,
+        "opened_at": "2026-02-11T23:21:58Z"
+      },
+      {
+        "issue_number": 104,
+        "opened_at": "2026-02-11T23:24:17Z"
+      },
+      {
+        "issue_number": 104,
+        "opened_at": "2026-02-11T23:24:42Z"
+      },
+      {
+        "issue_number": 104,
+        "opened_at": "2026-02-11T23:30:14Z"
+      },
+      {
+        "issue_number": 104,
+        "opened_at": "2026-02-11T23:35:22Z"
+      },
+      {
+        "issue_number": 106,
+        "opened_at": "2026-02-11T23:35:45Z",
+        "closed_at": "2026-02-11T23:36:52Z"
+      },
+      {
+        "issue_number": 107,
+        "opened_at": "2026-02-11T23:36:53Z"
+      },
+      {
+        "issue_number": 107,
+        "opened_at": "2026-02-11T23:42:07Z"
+      },
+      {
+        "issue_number": 107,
+        "opened_at": "2026-02-11T23:42:17Z"
+      },
+      {
+        "issue_number": 104,
+        "opened_at": "2026-02-11T23:45:35Z"
+      },
+      {
+        "issue_number": 104,
+        "opened_at": "2026-02-11T23:50:17Z"
+      },
+      {
+        "issue_number": 104,
+        "opened_at": "2026-02-11T23:51:07Z"
+      },
+      {
+        "issue_number": 107,
+        "opened_at": "2026-02-11T23:55:51Z"
+      },
+      {
+        "issue_number": 107,
+        "opened_at": "2026-02-11T23:56:39Z"
+      },
+      {
+        "issue_number": 107,
+        "opened_at": "2026-02-12T00:01:23Z"
+      },
+      {
+        "issue_number": 109,
+        "opened_at": "2026-02-12T00:02:12Z"
+      },
+      {
+        "issue_number": 109,
+        "opened_at": "2026-02-12T00:06:55Z"
+      },
+      {
+        "issue_number": 109,
+        "opened_at": "2026-02-12T00:07:44Z"
+      },
+      {
+        "issue_number": 104,
+        "opened_at": "2026-02-12T00:10:50Z"
+      },
+      {
+        "issue_number": 104,
+        "opened_at": "2026-02-12T00:16:23Z"
+      },
+      {
+        "issue_number": 104,
+        "opened_at": "2026-02-12T00:21:57Z",
+        "closed_at": "2026-02-12T00:22:57Z"
+      },
+      {
+        "issue_number": 107,
+        "opened_at": "2026-02-12T00:22:58Z"
+      },
+      {
+        "issue_number": 107,
+        "opened_at": "2026-02-12T00:28:33Z",
+        "closed_at": "2026-02-12T00:30:15Z"
+      },
+      {
+        "issue_number": 109,
+        "opened_at": "2026-02-12T00:30:16Z"
+      },
+      {
+        "issue_number": 109,
+        "opened_at": "2026-02-12T00:35:36Z"
+      },
+      {
+        "issue_number": 109,
+        "opened_at": "2026-02-12T00:35:49Z"
+      },
+      {
+        "issue_number": 109,
+        "opened_at": "2026-02-12T00:51:30Z"
+      },
+      {
+        "issue_number": 109,
+        "opened_at": "2026-02-12T00:57:05Z"
+      },
+      {
+        "issue_number": 109,
+        "opened_at": "2026-02-12T01:02:42Z"
+      },
+      {
+        "issue_number": 110,
+        "opened_at": "2026-02-12T01:08:16Z",
+        "closed_at": "2026-02-12T01:09:25Z"
+      },
+      {
+        "issue_number": 111,
+        "opened_at": "2026-02-12T01:09:26Z",
+        "closed_at": "2026-02-12T01:11:00Z"
+      },
+      {
+        "issue_number": 112,
+        "opened_at": "2026-02-12T01:11:01Z",
+        "closed_at": "2026-02-12T01:13:00Z"
+      },
+      {
+        "issue_number": 113,
+        "opened_at": "2026-02-12T01:13:01Z",
+        "closed_at": "2026-02-12T01:14:58Z"
+      },
+      {
+        "issue_number": 114,
+        "opened_at": "2026-02-12T01:14:59Z",
+        "closed_at": "2026-02-12T01:16:34Z"
+      },
+      {
+        "issue_number": 115,
+        "opened_at": "2026-02-12T01:16:35Z"
+      },
+      {
+        "issue_number": 115,
+        "opened_at": "2026-02-12T01:22:08Z"
+      },
+      {
+        "issue_number": 115,
+        "opened_at": "2026-02-12T01:27:42Z"
+      },
+      {
+        "issue_number": 116,
+        "opened_at": "2026-02-12T01:33:16Z"
+      },
+      {
+        "issue_number": 117,
+        "opened_at": "2026-02-12T01:34:31Z"
+      },
+      {
+        "issue_number": 118,
+        "opened_at": "2026-02-12T01:37:07Z"
+      },
+      {
+        "issue_number": 119,
+        "opened_at": "2026-02-12T01:38:13Z"
+      }
+    ]
+  }
+}

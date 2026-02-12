@@ -1,0 +1,141 @@
+{
+  "document": "plan/tiers/tier-4-view-endpoint.md",
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Add GET /books/:id route with UUID validation in src/routes/books.js",
+      "description": "Add a new `GET /:id` route definition to the existing books router in `src/routes/books.js`. The middleware chain must include: (1) `param('id').isUUID(4).withMessage('ID must be a valid UUID v4')` to validate the `:id` path parameter, (2) the shared `validate` middleware from `src/middleware/validate.js` to return 400 with structured errors if validation fails. Define this route after the existing `GET /` (list) route to avoid Express matching `:id` as a literal path segment for other routes.",
+      "dependencies": [],
+      "issue_file_path": "plan\\issues\\issue-tier-4-view-endpoint-1.md",
+      "completed_at": "2026-02-11T20:18:46Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/142",
+      "github_issue_number": 142
+    },
+    {
+      "id": 2,
+      "title": "Implement GET /books/:id handler logic",
+      "description": "Implement the route handler function for `GET /:id`. Read `id` from `req.params.id`, call `book.findById(req.app.locals.db, id)` to look up the book. If the result is `null`, respond with `404` and `{ error: \"Book not found\" }`. Otherwise, respond with `200` and the full book object. Ensure no unhandled exceptions are thrown — all paths return structured JSON.",
+      "dependencies": [
+        1
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-4-view-endpoint-2.md",
+      "completed_at": "2026-02-11T20:19:25Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/143",
+      "github_issue_number": 143
+    },
+    {
+      "id": 3,
+      "title": "Create test file test/routes/books.view.test.js with test setup",
+      "description": "Create `test/routes/books.view.test.js`. Import `supertest` and the `app`. Set up a `beforeEach` hook that seeds a book into the database by POSTing to `/books` with valid data (`title`, `author`, `isbn`, `published_year`) and captures the response as `seededBook`. Define a known non-existent but valid UUID (`'00000000-0000-4000-8000-000000000000'`) for use in 404 tests.",
+      "dependencies": [
+        2
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-4-view-endpoint-3.md",
+      "completed_at": "2026-02-11T20:20:01Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/144",
+      "github_issue_number": 144
+    },
+    {
+      "id": 4,
+      "title": "Write integration test: returns 200 with the correct book for a valid existing ID",
+      "description": "In `test/routes/books.view.test.js`, add a test that seeds a book, sends `GET /books/:seededId`, asserts the response status is `200`, and verifies the response body matches the seeded book's data (id, title, author, etc.).",
+      "dependencies": [
+        3
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-4-view-endpoint-4.md",
+      "completed_at": "2026-02-11T20:20:34Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/145",
+      "github_issue_number": 145
+    },
+    {
+      "id": 5,
+      "title": "Write integration test: returns 404 for a valid UUID that does not exist",
+      "description": "Add a test that sends `GET /books/00000000-0000-4000-8000-000000000000` and asserts a `404` status with body `{ error: \"Book not found\" }`.",
+      "dependencies": [
+        3
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-4-view-endpoint-5.md",
+      "completed_at": "2026-02-11T20:21:07Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/146",
+      "github_issue_number": 146
+    },
+    {
+      "id": 6,
+      "title": "Write integration test: returns 400 for a malformed (non-UUID) ID",
+      "description": "Add a test that sends `GET /books/not-a-uuid` and asserts a `400` status with body containing `{ errors: [{ field: \"id\", message: ... }] }`.",
+      "dependencies": [
+        3
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-4-view-endpoint-6.md",
+      "completed_at": "2026-02-11T20:21:39Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/147",
+      "github_issue_number": 147
+    },
+    {
+      "id": 7,
+      "title": "Write integration test: returns 400 for a numeric ID",
+      "description": "Add a test that sends `GET /books/12345` and asserts a `400` status with body containing `{ errors: [{ field: \"id\", message: ... }] }`.",
+      "dependencies": [
+        3
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-4-view-endpoint-7.md",
+      "completed_at": "2026-02-11T20:22:14Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/148",
+      "github_issue_number": 148
+    },
+    {
+      "id": 8,
+      "title": "Write integration test: response body contains all book schema fields",
+      "description": "Add a test that seeds a book, sends `GET /books/:id`, asserts a `200` status, and verifies the response body contains every field defined in the book schema: `id`, `title`, `author`, `isbn`, `published_year`, `status`, `checked_out_at`, `created_at`, `updated_at`.",
+      "dependencies": [
+        3
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-4-view-endpoint-8.md",
+      "completed_at": "2026-02-11T20:22:57Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/149",
+      "github_issue_number": 149
+    },
+    {
+      "id": 9,
+      "title": "Write integration test: status field reflects 'available' for a new book",
+      "description": "Add a test that seeds a book with default status, sends `GET /books/:id`, and asserts `body.status === 'available'`.",
+      "dependencies": [
+        3
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-4-view-endpoint-9.md",
+      "completed_at": "2026-02-11T20:23:36Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/150",
+      "github_issue_number": 150
+    },
+    {
+      "id": 10,
+      "title": "Write integration test: checked_out_at is null for an available book",
+      "description": "Add a test that seeds a book, sends `GET /books/:id`, and asserts `body.checked_out_at === null`.",
+      "dependencies": [
+        3
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-4-view-endpoint-10.md",
+      "completed_at": "2026-02-11T20:24:11Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/151",
+      "github_issue_number": 151
+    },
+    {
+      "id": 11,
+      "title": "Run full test suite and verify all tests pass",
+      "description": "Run `npm test` and confirm all 7 new integration tests in `books.view.test.js` pass, all prior tier tests (Tier 1, Tier 2, Tier 3) continue to pass, no unhandled exceptions occur for any input, and the CI pipeline remains green.",
+      "dependencies": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-4-view-endpoint-11.md",
+      "completed_at": "2026-02-11T20:24:40Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/152",
+      "github_issue_number": 152
+    }
+  ]
+}

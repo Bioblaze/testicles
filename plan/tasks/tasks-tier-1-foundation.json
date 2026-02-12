@@ -1,0 +1,158 @@
+{
+  "document": "plan/tiers/tier-1-foundation.md",
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Initialize Node.js project and configure package.json",
+      "description": "Run `npm init -y` and configure package.json with name `book-api`, main `src/server.js`, scripts (`start`: `node src/server.js`, `test`: `jest --coverage --forceExit`), and engines `{ \"node\": \"\u003e=18.0.0\" }`.",
+      "dependencies": [],
+      "issue_file_path": "plan\\issues\\issue-tier-1-foundation-1.md",
+      "completed_at": "2026-02-11T19:56:01Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/104",
+      "github_issue_number": 104
+    },
+    {
+      "id": 2,
+      "title": "Install production dependencies (express, dotenv)",
+      "description": "Run `npm install express dotenv` to add the HTTP framework and environment variable loader as production dependencies.",
+      "dependencies": [
+        1
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-1-foundation-2.md",
+      "completed_at": "2026-02-11T19:56:32Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/105",
+      "github_issue_number": 105
+    },
+    {
+      "id": 3,
+      "title": "Install dev dependencies (jest, supertest)",
+      "description": "Run `npm install --save-dev jest supertest` to add the test runner and HTTP assertion library as development dependencies.",
+      "dependencies": [
+        1
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-1-foundation-3.md",
+      "completed_at": "2026-02-11T19:57:05Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/106",
+      "github_issue_number": 106
+    },
+    {
+      "id": 4,
+      "title": "Create .gitignore",
+      "description": "Create `.gitignore` at project root with entries for `node_modules/`, `coverage/`, `.env`, and `*.db` to prevent committing generated files and secrets.",
+      "dependencies": [],
+      "issue_file_path": "plan\\issues\\issue-tier-1-foundation-4.md",
+      "completed_at": "2026-02-11T19:57:41Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/107",
+      "github_issue_number": 107
+    },
+    {
+      "id": 5,
+      "title": "Create .env.example environment variable template",
+      "description": "Create `.env.example` with `PORT=3000` and `NODE_ENV=development` as a reference template for required environment variables.",
+      "dependencies": [],
+      "issue_file_path": "plan\\issues\\issue-tier-1-foundation-5.md",
+      "completed_at": "2026-02-11T19:58:16Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/108",
+      "github_issue_number": 108
+    },
+    {
+      "id": 6,
+      "title": "Create project directory structure",
+      "description": "Create the directory scaffold: `src/`, `src/routes/`, `test/`, and `.github/workflows/`.",
+      "dependencies": [],
+      "issue_file_path": "plan\\issues\\issue-tier-1-foundation-6.md",
+      "completed_at": "2026-02-11T19:58:58Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/109",
+      "github_issue_number": 109
+    },
+    {
+      "id": 7,
+      "title": "Implement health check route module (src/routes/health.js)",
+      "description": "Create an Express Router in `src/routes/health.js` that defines `GET /health` returning status 200 with JSON body `{ \"status\": \"ok\" }`. Export the router.",
+      "dependencies": [
+        2,
+        6
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-1-foundation-7.md",
+      "completed_at": "2026-02-11T19:59:37Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/110",
+      "github_issue_number": 110
+    },
+    {
+      "id": 8,
+      "title": "Implement Express application factory (src/app.js)",
+      "description": "Create `src/app.js` that imports Express, creates an app instance, mounts `express.json()` middleware, mounts the health route module at the root path, adds a catch-all 404 middleware returning `{ \"error\": \"Not found\" }`, and exports the app without calling `.listen()`.",
+      "dependencies": [
+        7
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-1-foundation-8.md",
+      "completed_at": "2026-02-11T20:00:12Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/111",
+      "github_issue_number": 111
+    },
+    {
+      "id": 9,
+      "title": "Implement production server entry point (src/server.js)",
+      "description": "Create `src/server.js` that loads `dotenv/config`, imports the app from `./app.js`, reads `PORT` from `process.env` (defaulting to 3000), calls `app.listen(PORT)`, and logs a startup message to stdout.",
+      "dependencies": [
+        2,
+        8
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-1-foundation-9.md",
+      "completed_at": "2026-02-11T20:00:47Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/112",
+      "github_issue_number": 112
+    },
+    {
+      "id": 10,
+      "title": "Create Jest configuration (jest.config.js)",
+      "description": "Create `jest.config.js` with `testEnvironment: 'node'`, `roots: ['\u003crootDir\u003e/test']`, `coverageDirectory: 'coverage'`, `coveragePathIgnorePatterns` excluding `node_modules` and `src/server.js`, and `coverageThreshold` set to 80% for statements, branches, functions, and lines.",
+      "dependencies": [
+        3
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-1-foundation-10.md",
+      "completed_at": "2026-02-11T20:01:22Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/113",
+      "github_issue_number": 113
+    },
+    {
+      "id": 11,
+      "title": "Write integration tests for health endpoint and 404 handling (test/health.test.js)",
+      "description": "Create `test/health.test.js` using supertest against the app. Implement three test cases: (1) `GET /health` returns 200 with `{ status: \"ok\" }`, (2) `GET /health` returns `application/json` content type, (3) `GET /nonexistent` returns 404 with `{ error: \"Not found\" }`.",
+      "dependencies": [
+        3,
+        8,
+        10
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-1-foundation-11.md",
+      "completed_at": "2026-02-11T20:02:01Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/114",
+      "github_issue_number": 114
+    },
+    {
+      "id": 12,
+      "title": "Verify tests pass locally and coverage meets thresholds",
+      "description": "Run `npm test` and confirm all 3 test cases pass. Verify the Jest coverage report is generated and all four metrics (statements, branches, functions, lines) meet the 80% threshold. Verify `src/server.js` is excluded from coverage.",
+      "dependencies": [
+        11
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-1-foundation-12.md",
+      "completed_at": "2026-02-11T20:02:38Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/115",
+      "github_issue_number": 115
+    },
+    {
+      "id": 13,
+      "title": "Create GitHub Actions CI workflow (.github/workflows/ci.yml)",
+      "description": "Create `.github/workflows/ci.yml` that triggers on push/PR to `main`, runs a matrix build against Node.js 18.x and 20.x, checks out the repo, sets up Node.js with npm cache, runs `npm ci`, runs `npm test`, and uploads the coverage directory as an artifact (even on failure).",
+      "dependencies": [
+        6,
+        12
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-1-foundation-13.md",
+      "completed_at": "2026-02-11T20:03:14Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/116",
+      "github_issue_number": 116
+    }
+  ]
+}

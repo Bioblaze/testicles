@@ -1,0 +1,128 @@
+{
+  "document": "plan/tiers/tier-5-checkout-return.md",
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Create custom error class hierarchy in src/errors.js",
+      "description": "Create `src/errors.js` defining three error classes: (1) `AppError extends Error` — base class accepting `message` and `statusCode`, sets `this.name = this.constructor.name`. (2) `BookNotFoundError extends AppError` — defaults message to `'Book not found'` and statusCode to `404`. (3) `BookUnavailableError extends AppError` — accepts a custom message and sets statusCode to `409`. Export all three classes. These are used by the service layer and caught by route handlers for HTTP response mapping.",
+      "dependencies": [],
+      "issue_file_path": "plan\\issues\\issue-tier-5-checkout-return-1.md",
+      "completed_at": "2026-02-11T20:25:23Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/153",
+      "github_issue_number": 153
+    },
+    {
+      "id": 2,
+      "title": "Implement checkoutBook function in src/services/checkout.js",
+      "description": "Create `src/services/checkout.js` and implement `checkoutBook(db, id)`. The function must: (1) Wrap all logic in a `better-sqlite3` transaction via `db.transaction(...)`. (2) SELECT the book by `id`. (3) If no book found, throw `BookNotFoundError`. (4) If `book.status !== 'available'`, throw `BookUnavailableError('Book is already checked out')`. (5) UPDATE the book setting `status = 'checked_out'`, `checked_out_at` and `updated_at` to `new Date().toISOString()`. (6) SELECT and return the updated book row. Import error classes from `../errors`.",
+      "dependencies": [
+        1
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-5-checkout-return-2.md",
+      "completed_at": "2026-02-11T20:25:59Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/154",
+      "github_issue_number": 154
+    },
+    {
+      "id": 3,
+      "title": "Implement returnBook function in src/services/checkout.js",
+      "description": "In `src/services/checkout.js`, implement `returnBook(db, id)`. The function must: (1) Wrap all logic in a `better-sqlite3` transaction via `db.transaction(...)`. (2) SELECT the book by `id`. (3) If no book found, throw `BookNotFoundError`. (4) If `book.status !== 'checked_out'`, throw `BookUnavailableError('Book is not currently checked out')`. (5) UPDATE the book setting `status = 'available'`, `checked_out_at = null`, and `updated_at` to `new Date().toISOString()`. (6) SELECT and return the updated book row. Export both `checkoutBook` and `returnBook`.",
+      "dependencies": [
+        2
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-5-checkout-return-3.md",
+      "completed_at": "2026-02-11T20:26:38Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/155",
+      "github_issue_number": 155
+    },
+    {
+      "id": 4,
+      "title": "Add POST /books/:id/checkout route to src/routes/books.js",
+      "description": "In the existing `src/routes/books.js`, add a `POST /:id/checkout` route. The middleware chain must include: (1) `param('id').isUUID(4).withMessage('ID must be a valid UUID v4')`, (2) the shared `validate` middleware. The handler reads `id` from `req.params.id`, calls `checkoutBook(db, id)`, and on success responds with `200` and the updated book JSON. Catch `BookNotFoundError` → respond `404` with `{ error: err.message }`. Catch `BookUnavailableError` → respond `409` with `{ error: err.message }`. Re-throw any unexpected errors. Import `checkoutBook` from `../services/checkout` and error classes from `../errors`.",
+      "dependencies": [
+        2,
+        3
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-5-checkout-return-4.md",
+      "completed_at": "2026-02-11T20:27:23Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/156",
+      "github_issue_number": 156
+    },
+    {
+      "id": 5,
+      "title": "Add POST /books/:id/return route to src/routes/books.js",
+      "description": "In the existing `src/routes/books.js`, add a `POST /:id/return` route. The middleware chain must include: (1) `param('id').isUUID(4).withMessage('ID must be a valid UUID v4')`, (2) the shared `validate` middleware. The handler reads `id` from `req.params.id`, calls `returnBook(db, id)`, and on success responds with `200` and the updated book JSON. Catch `BookNotFoundError` → respond `404` with `{ error: err.message }`. Catch `BookUnavailableError` → respond `409` with `{ error: err.message }`. Re-throw any unexpected errors. Import `returnBook` from `../services/checkout` and error classes from `../errors`.",
+      "dependencies": [
+        3,
+        4
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-5-checkout-return-5.md",
+      "completed_at": "2026-02-11T20:28:06Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/157",
+      "github_issue_number": 157
+    },
+    {
+      "id": 6,
+      "title": "Create test/services/checkout.test.js with test setup and checkoutBook tests",
+      "description": "Create `test/services/checkout.test.js`. In `beforeEach`, create a fresh in-memory `better-sqlite3` database, run migrations to create the books table, and seed a book with `status: 'available'`. Write tests: (1) `checkoutBook` transitions available → checked_out — assert returned book has `status: 'checked_out'`. (2) `checkoutBook` sets `checked_out_at` to a valid ISO-8601 string (not null). (3) `checkoutBook` throws `BookNotFoundError` for a non-existent UUID. (4) `checkoutBook` throws `BookUnavailableError` with message 'Book is already checked out' when called on an already checked-out book.",
+      "dependencies": [
+        2
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-5-checkout-return-6.md",
+      "completed_at": "2026-02-11T20:28:56Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/158",
+      "github_issue_number": 158
+    },
+    {
+      "id": 7,
+      "title": "Add returnBook unit tests and full lifecycle test to test/services/checkout.test.js",
+      "description": "In `test/services/checkout.test.js`, add tests: (5) `returnBook` transitions checked_out → available — seed and checkout a book, then return it, assert `status: 'available'`. (6) `returnBook` clears `checked_out_at` to `null`. (7) `returnBook` throws `BookNotFoundError` for a non-existent UUID. (8) `returnBook` throws `BookUnavailableError` with message 'Book is not currently checked out' when called on an already available book. (9) Full lifecycle test: create → checkout → return → checkout again, all succeed, final status is `checked_out`.",
+      "dependencies": [
+        3,
+        6
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-5-checkout-return-7.md",
+      "completed_at": "2026-02-11T20:29:34Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/159",
+      "github_issue_number": 159
+    },
+    {
+      "id": 8,
+      "title": "Create test/routes/books.checkout.test.js with all 6 integration tests",
+      "description": "Create `test/routes/books.checkout.test.js`. Use `supertest` and the app instance. Write 6 integration tests: (1) Successful checkout returns 200 with book having `status: 'checked_out'`. (2) Checkout non-existent valid UUID returns 404 with `{ error: 'Book not found' }`. (3) Checkout already checked-out book returns 409 with `{ error: 'Book is already checked out' }`. (4) Malformed UUID (e.g., 'not-a-uuid') returns 400 with `{ errors: [{ field: 'id', ... }] }`. (5) Response `status` field equals `'checked_out'`. (6) Response `checked_out_at` is a valid parseable timestamp (not null). Seed books via POST /books in `beforeEach` or per-test setup.",
+      "dependencies": [
+        4
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-5-checkout-return-8.md",
+      "completed_at": "2026-02-11T20:30:16Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/160",
+      "github_issue_number": 160
+    },
+    {
+      "id": 9,
+      "title": "Create test/routes/books.return.test.js with all 6 integration tests",
+      "description": "Create `test/routes/books.return.test.js`. Use `supertest` and the app instance. Write 6 integration tests: (1) Successful return (seed + checkout + return) returns 200 with book having `status: 'available'`. (2) Return non-existent valid UUID returns 404 with `{ error: 'Book not found' }`. (3) Return already available book returns 409 with `{ error: 'Book is not currently checked out' }`. (4) Malformed UUID returns 400 with `{ errors: [{ field: 'id', ... }] }`. (5) Response `status` field equals `'available'`. (6) Response `checked_out_at` is `null`. Seed books via POST /books and POST /books/:id/checkout in setup as needed.",
+      "dependencies": [
+        5
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-5-checkout-return-9.md",
+      "completed_at": "2026-02-11T20:30:49Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/161",
+      "github_issue_number": 161
+    },
+    {
+      "id": 10,
+      "title": "Run full test suite and verify all tests pass including prior tiers",
+      "description": "Run `npm test` and verify: all 9 service unit tests in `test/services/checkout.test.js` pass, all 6 checkout integration tests in `test/routes/books.checkout.test.js` pass, all 6 return integration tests in `test/routes/books.return.test.js` pass, all prior tier tests continue to pass, and the CI pipeline remains green. Confirm the state machine is enforced — only `available → checked_out` and `checked_out → available` transitions are allowed; all others return 409.",
+      "dependencies": [
+        7,
+        8,
+        9
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-5-checkout-return-10.md",
+      "completed_at": "2026-02-11T20:31:32Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/162",
+      "github_issue_number": 162
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "document": "plan/tiers/tier-6-error-handling-hardening.md",
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Install error handling, logging, and hardening dependencies",
+      "description": "Install runtime dependencies: `pino` (structured JSON logger), `pino-http` (Express request/response logging middleware), `express-rate-limit` (IP-based rate limiting), and `helmet` (security HTTP response headers) via `npm install pino pino-http express-rate-limit helmet`. Install dev dependency `pino-pretty` via `npm install --save-dev pino-pretty` for human-readable logs during development. Verify all five packages appear in `package.json` under the correct dependency sections.",
+      "dependencies": [],
+      "issue_file_path": "plan\\issues\\issue-tier-6-error-handling-hardening-1.md",
+      "completed_at": "2026-02-11T20:32:10Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/163",
+      "github_issue_number": 163
+    },
+    {
+      "id": 2,
+      "title": "Create Pino logger factory in src/logger.js",
+      "description": "Create `src/logger.js` that imports `pino` and exports a configured logger instance with environment-aware settings. In `test` environment (`NODE_ENV === 'test'`), set log level to `silent` to keep test output clean. In `production`, set log level to `info` with raw JSON output to stdout (no transport). In `development` (or any other env), set log level to `debug` and use the `pino-pretty` transport with `colorize: true` for human-readable output. Export the logger as the module default.",
+      "dependencies": [
+        1
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-6-error-handling-hardening-2.md",
+      "completed_at": "2026-02-11T20:32:51Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/164",
+      "github_issue_number": 164
+    },
+    {
+      "id": 3,
+      "title": "Create centralized error handler middleware in src/middleware/errorHandler.js",
+      "description": "Create `src/middleware/errorHandler.js` exporting a four-argument Express middleware function `(err, req, res, next)`. The handler must: (1) Check if `err` is an instance of `AppError` (imported from `../errors`) — if so, log at `warn` level with `{ err, statusCode: err.statusCode }` and respond with `res.status(err.statusCode).json({ error: err.message })`. (2) Check if `err.type === 'entity.parse.failed'` (malformed JSON from `express.json()`) — if so, respond with `400` and `{ error: 'Malformed JSON in request body' }`. (3) For all other unknown/unexpected errors, log the full error with stack trace at `error` level via Pino and respond with `500` and `{ error: 'Internal server error' }`. Never leak stack traces, internal details, or original error messages to the client. All error responses must follow the consistent shape `{ error: \"string message\" }`.",
+      "dependencies": [
+        2
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-6-error-handling-hardening-3.md",
+      "completed_at": "2026-02-11T20:33:28Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/165",
+      "github_issue_number": 165
+    },
+    {
+      "id": 4,
+      "title": "Create rate limiter middleware in src/middleware/rateLimiter.js",
+      "description": "Create `src/middleware/rateLimiter.js` that imports `express-rate-limit` and exports a configured rate limiter instance. Configuration: `windowMs` set to `15 * 60 * 1000` (15 minutes), `max` set to `100` requests per IP per window, `standardHeaders: true` (returns `RateLimit-*` headers), `legacyHeaders: false` (disables `X-RateLimit-*` headers), and `message` set to `{ error: 'Too many requests, please try again later' }` for the `429` response body. Consider making `windowMs` and `max` configurable via environment variables or exporting a factory function to allow lower limits in tests.",
+      "dependencies": [
+        1
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-6-error-handling-hardening-4.md",
+      "completed_at": "2026-02-11T20:34:05Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/166",
+      "github_issue_number": 166
+    },
+    {
+      "id": 5,
+      "title": "Integrate all new middleware into src/app.js in correct order",
+      "description": "Modify `src/app.js` to integrate the new middleware in the correct order: (1) `helmet()` — applied first, before any response, to set security headers. (2) `pino-http` middleware wrapping the Pino logger from `src/logger.js` — for automatic request/response logging. (3) `express.json()` — body parsing (already exists, keep in place). (4) `rateLimiter` from `src/middleware/rateLimiter.js` — rate limiting after body parsing. (5) Existing routes (health, books). (6) 404 catch-all for unknown routes — must come after all routes. (7) `errorHandler` from `src/middleware/errorHandler.js` — MUST be the absolute last middleware registered. Import `helmet`, `pinoHttp`, `logger`, `rateLimiter`, and `errorHandler`. Ensure the 404 handler and error handler are moved/placed after all route definitions.",
+      "dependencies": [
+        2,
+        3,
+        4
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-6-error-handling-hardening-5.md",
+      "completed_at": "2026-02-11T20:35:01Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/167",
+      "github_issue_number": 167
+    },
+    {
+      "id": 6,
+      "title": "Create error handler unit tests in test/middleware/errorHandler.test.js",
+      "description": "Create `test/middleware/errorHandler.test.js` with 6 unit tests that invoke the error handler directly with mock `req`, `res`, and `next` objects. Tests: (1) `BookNotFoundError` maps to 404 with `{ error: 'Book not found' }`. (2) `BookUnavailableError` maps to 409 with `{ error: 'Book is already checked out' }`. (3) Unknown `Error('something broke')` returns 500 with `{ error: 'Internal server error' }`. (4) Unknown error does NOT leak internal details — `Error('DB connection failed at host:5432')` returns 500 and body does NOT contain 'DB connection' or '5432'. (5) JSON parse error (object with `type: 'entity.parse.failed'`) returns 400 with `{ error: 'Malformed JSON in request body' }`. (6) All error responses have consistent shape — verify the body always has an `error` key with a string value for various error types.",
+      "dependencies": [
+        3
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-6-error-handling-hardening-6.md",
+      "completed_at": "2026-02-11T20:35:52Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/168",
+      "github_issue_number": 168
+    },
+    {
+      "id": 7,
+      "title": "Create rate limiting integration tests in test/integration/rateLimit.test.js",
+      "description": "Create `test/integration/rateLimit.test.js` with 4 integration tests using `supertest`. Configure or use a test-specific app instance with a low rate limit (e.g., `max: 5` per window). Tests: (1) Requests within the limit succeed — send 5 requests to `GET /health`, all return `200`. (2) Exceeding the limit returns 429 — send 6 requests to `GET /health`, the 6th returns `429`. (3) 429 response includes a `retry-after` header. (4) 429 response body is JSON matching `{ error: 'Too many requests, please try again later' }`. Ensure the test rate limiter uses a short window or low max to avoid needing to send 100+ requests.",
+      "dependencies": [
+        5
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-6-error-handling-hardening-7.md",
+      "completed_at": "2026-02-11T20:36:47Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/169",
+      "github_issue_number": 169
+    },
+    {
+      "id": 8,
+      "title": "Create edge case and hardening integration tests in test/integration/edgeCases.test.js",
+      "description": "Create `test/integration/edgeCases.test.js` with 10 integration tests using `supertest`. Tests: (1) Malformed JSON body (`'{ invalid json }'` with `Content-Type: application/json`) to `POST /books` returns 400 with `{ error: 'Malformed JSON in request body' }`, NOT 500. (2) Extremely long string field (`title` of 10,000 chars) to `POST /books` returns 400 validation error. (3) SQL injection in query params (`GET /books?page=1;DROP TABLE books`) returns 200 or 400 and table is NOT dropped. (4) SQL injection in body fields (`title: \"'; DROP TABLE books; --\"`) to `POST /books` returns 201 or 400; if stored, the literal string is stored safely. (5) Unexpected `Content-Type: text/plain` on `POST /books` returns 400 or 415. (6) Concurrent checkout of same book — two simultaneous `POST /books/:id/checkout` requests result in one 200 and one 409. (7) `GET /books?page=-1` returns 200 and falls back to default page 1. (8) `POST /books` with extra unknown fields (`{ ...validFields, foo: 'bar' }`) returns 201 and created book does NOT contain `foo`. (9) Empty request body to `POST /books` returns 400 with validation errors. (10) `POST /books` with `Content-Length: 0` and empty body returns 400 with validation errors, not 500.",
+      "dependencies": [
+        5
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-6-error-handling-hardening-8.md",
+      "completed_at": "2026-02-11T20:37:59Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/170",
+      "github_issue_number": 170
+    },
+    {
+      "id": 9,
+      "title": "Run full test suite and verify all tests pass including prior tiers",
+      "description": "Run `npm test` and verify: all 6 error handler unit tests in `test/middleware/errorHandler.test.js` pass, all 4 rate limit integration tests in `test/integration/rateLimit.test.js` pass, all 10 edge-case tests in `test/integration/edgeCases.test.js` pass, and all prior tier tests continue to pass. Confirm: `helmet` security headers are present on all responses, no stack traces or internal error details are sent to clients, all 500-level errors are logged with full context via Pino, malformed JSON returns 400 not 500, rate limiting enforces the configured window and request cap, no unhandled promise rejections or uncaught exceptions occur in any tested code path, and the CI pipeline remains green.",
+      "dependencies": [
+        6,
+        7,
+        8
+      ],
+      "issue_file_path": "plan\\issues\\issue-tier-6-error-handling-hardening-9.md",
+      "completed_at": "2026-02-11T20:38:36Z",
+      "github_issue_url": "https://github.com/Bioblaze/testicles/issues/171",
+      "github_issue_number": 171
+    }
+  ]
+}
