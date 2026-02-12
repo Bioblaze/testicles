@@ -29,6 +29,10 @@ describe('.gitignore configuration', () => {
     expect(content).toMatch(/^\*\.db$/m);
   });
 
+  test('data/ is listed as an ignored pattern', () => {
+    expect(content).toMatch(/^data\/$/m);
+  });
+
   test('.env.example is not ignored (no pattern would exclude it)', () => {
     // .env.example should NOT match the .env pattern (which is exact)
     // Split into lines and verify no line would ignore .env.example

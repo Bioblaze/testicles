@@ -2,3 +2,6 @@ node_modules/
 coverage/
 .env
 *.db
+
+# Database files
+data/
