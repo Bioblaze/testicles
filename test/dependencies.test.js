@@ -28,6 +28,24 @@ describe('production dependencies', () => {
     expect(() => require('dotenv')).not.toThrow();
   });
 
+  test('better-sqlite3 is listed under dependencies', () => {
+    expect(pkg.dependencies).toBeDefined();
+    expect(pkg.dependencies['better-sqlite3']).toBeDefined();
+  });
+
+  test('uuid is listed under dependencies', () => {
+    expect(pkg.dependencies).toBeDefined();
+    expect(pkg.dependencies.uuid).toBeDefined();
+  });
+
+  test('better-sqlite3 can be required without errors', () => {
+    expect(() => require('better-sqlite3')).not.toThrow();
+  });
+
+  test('uuid can be required without errors', () => {
+    expect(() => require('uuid')).not.toThrow();
+  });
+
   test('package-lock.json exists', () => {
     const lockPath = path.resolve(__dirname, '..', 'package-lock.json');
     expect(fs.existsSync(lockPath)).toBe(true);
