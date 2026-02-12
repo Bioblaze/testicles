@@ -40,6 +40,12 @@ describe('CheckoutHistory model', () => {
   test('history entry is created on return', () => {
     const book = seedBook();
     checkoutBook(db, book.id);
+
+    // Back-date the checkout entry so the return entry is definitively newer
+    db.prepare(
+      "UPDATE checkout_history SET timestamp = '2020-01-01T00:00:00.000Z' WHERE book_id = ? AND action = 'checked_out'"
+    ).run(book.id);
+
     returnBook(db, book.id);
 
     const rows = db.prepare('SELECT * FROM checkout_history WHERE book_id = ? ORDER BY timestamp DESC').all(book.id);
